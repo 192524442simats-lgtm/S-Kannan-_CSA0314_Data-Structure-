@@ -1,0 +1,5708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Grocery Price Comparison System | Min-Heap Priority Queue Engine</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Chart.js CDN for interactive charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Application Stylesheet -->
+  <style>
+/* Inlined Stylesheet */
+/* ==========================================================================
+   Smart Grocery Price Comparison System - Stylesheet
+   Theme: Modern Green and White (Emerald, Mint, Crisp White, Slate)
+   ========================================================================== */
+
+:root {
+  /* Primary Green Palette */
+  --emerald-900: #064e3b;
+  --emerald-800: #065f46;
+  --emerald-700: #047857;
+  --emerald-600: #059669;
+  --emerald-500: #10b981;
+  --emerald-400: #34d399;
+  --emerald-200: #a7f3d0;
+  --emerald-100: #d1fae5;
+  --emerald-50:  #ecfdf5;
+
+  /* Neutrals & Slate */
+  --slate-900: #0f172a;
+  --slate-800: #1e293b;
+  --slate-700: #334155;
+  --slate-600: #475569;
+  --slate-500: #64748b;
+  --slate-400: #94a3b8;
+  --slate-300: #cbd5e1;
+  --slate-200: #e2e8f0;
+  --slate-100: #f1f5f9;
+  --slate-50:  #f8fafc;
+  --white:     #ffffff;
+
+  /* Accent status colors */
+  --amber-500: #f59e0b;
+  --amber-100: #fef3c7;
+  --rose-600:  #e11d48;
+  --rose-500:  #f43f5e;
+  --rose-100:  #ffe4e6;
+  --blue-600:  #2563eb;
+  --blue-100:  #dbeafe;
+
+  /* Layout */
+  --sidebar-width: 270px;
+  --header-height: 64px;
+  --border-radius-sm: 6px;
+  --border-radius-md: 10px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 24px;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+  --shadow-emerald: 0 10px 25px -5px rgba(5, 150, 105, 0.25);
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #f6fbf8;
+  color: var(--slate-800);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* App Shell Layout */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   SIDEBAR NAVIGATION
+   ========================================================================== */
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--white);
+  border-right: 1px solid var(--slate-200);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+  padding: 24px 20px 18px 20px;
+  border-bottom: 1px solid var(--slate-100);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--emerald-600), var(--emerald-800));
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 20px;
+  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3);
+}
+
+.brand-text h1 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--slate-900);
+  letter-spacing: -0.02em;
+}
+
+.brand-badge {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  background: var(--emerald-100);
+  color: var(--emerald-800);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  margin-top: 2px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 20px 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-category {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--slate-400);
+  padding: 12px 12px 4px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: var(--border-radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--slate-600);
+  transition: var(--transition);
+}
+
+.nav-link i {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  color: var(--slate-400);
+  transition: var(--transition);
+}
+
+.nav-link:hover {
+  background: var(--emerald-50);
+  color: var(--emerald-800);
+}
+
+.nav-link:hover i {
+  color: var(--emerald-600);
+}
+
+.nav-link.active {
+  background: linear-gradient(90deg, var(--emerald-600), var(--emerald-700));
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+}
+
+.nav-link.active i {
+  color: var(--white);
+}
+
+.sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--slate-100);
+}
+
+.academic-tag {
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-md);
+  padding: 10px 12px;
+  font-size: 11.5px;
+  color: var(--slate-600);
+}
+
+.academic-tag strong {
+  display: block;
+  color: var(--emerald-800);
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+/* ==========================================================================
+   MAIN CONTENT WRAPPER
+   ========================================================================== */
+.main-wrapper {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Top Demonstration Banner */
+.demo-banner {
+  background: linear-gradient(90deg, #ecfdf5, #f0fdf4);
+  border-bottom: 1px solid var(--emerald-200);
+  padding: 8px 24px;
+  font-size: 12.5px;
+  color: var(--emerald-900);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.demo-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.demo-banner i {
+  color: var(--emerald-600);
+}
+
+/* Top App Bar */
+.top-header {
+  height: var(--header-height);
+  background: var(--white);
+  border-bottom: 1px solid var(--slate-200);
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.header-title-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--slate-700);
+  cursor: pointer;
+  padding: 8px;
+}
+
+.header-page-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--slate-900);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--emerald-50);
+  border: 1px solid var(--emerald-200);
+  color: var(--emerald-800);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 9999px;
+}
+
+.live-pulse {
+  width: 8px;
+  height: 8px;
+  background-color: var(--emerald-500);
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: pulse 1.6s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* Page Section Container */
+.content-body {
+  padding: 32px 32px 64px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.page-section {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+.hidden-section {
+  display: none !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Section Header Component */
+.section-header {
+  margin-bottom: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.section-header-left h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--slate-900);
+  letter-spacing: -0.02em;
+}
+
+.section-header-left p {
+  font-size: 14.5px;
+  color: var(--slate-500);
+  margin-top: 4px;
+}
+
+.complexity-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0fdf4;
+  border: 1px solid var(--emerald-200);
+  color: var(--emerald-800);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: var(--border-radius-md);
+}
+
+/* ==========================================================================
+   BUTTONS & CONTROLS
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--emerald-600);
+  color: var(--white);
+  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.2);
+}
+
+.btn-primary:hover {
+  background: var(--emerald-700);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(5, 150, 105, 0.3);
+}
+
+.btn-outline-emerald {
+  background: var(--white);
+  color: var(--emerald-700);
+  border-color: var(--emerald-400);
+}
+
+.btn-outline-emerald:hover {
+  background: var(--emerald-50);
+  border-color: var(--emerald-600);
+}
+
+.btn-secondary {
+  background: var(--slate-100);
+  color: var(--slate-700);
+  border-color: var(--slate-200);
+}
+
+.btn-secondary:hover {
+  background: var(--slate-200);
+}
+
+.btn-danger {
+  background: var(--rose-100);
+  color: var(--rose-600);
+  border-color: #fecdd3;
+}
+
+.btn-danger:hover {
+  background: #ffe4e6;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12.5px;
+}
+
+.btn-lg {
+  padding: 13px 26px;
+  font-size: 15px;
+  border-radius: var(--border-radius-lg);
+}
+
+.btn-icon-action {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--slate-200);
+  background: var(--white);
+  color: var(--slate-600);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.btn-icon-action:hover {
+  background: var(--slate-100);
+  color: var(--slate-900);
+}
+
+.btn-compare-shortcut:hover {
+  background: var(--emerald-50);
+  color: var(--emerald-700);
+  border-color: var(--emerald-300);
+}
+
+.btn-delete-product:hover {
+  background: var(--rose-100);
+  color: var(--rose-600);
+  border-color: #fecdd3;
+}
+
+/* ==========================================================================
+   CARDS & CONTAINERS
+   ========================================================================== */
+.card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--slate-100);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--slate-800);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-body {
+  padding: 24px;
+}
+
+/* ==========================================================================
+   1. HOME PAGE STYLES
+   ========================================================================== */
+.hero-card {
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
+  color: var(--white);
+  border-radius: var(--border-radius-xl);
+  padding: 48px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-emerald);
+}
+
+.hero-card::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  padding: 6px 16px;
+  border-radius: 9999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--emerald-200);
+  margin-bottom: 18px;
+}
+
+.hero-title {
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+  max-width: 900px;
+}
+
+.hero-subtitle {
+  font-size: 16px;
+  color: #d1fae5;
+  max-width: 820px;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.hero-cta-group {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.btn-hero-white {
+  background: var(--white);
+  color: var(--emerald-800);
+  font-weight: 700;
+}
+
+.btn-hero-white:hover {
+  background: #f0fdf4;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn-hero-outline {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-hero-outline:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Home Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+.stat-metric-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  transition: var(--transition);
+}
+
+.stat-metric-card:hover {
+  border-color: var(--emerald-400);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.icon-emerald { background: var(--emerald-100); color: var(--emerald-700); }
+.icon-blue    { background: var(--blue-100); color: var(--blue-600); }
+.icon-amber   { background: var(--amber-100); color: var(--amber-500); }
+.icon-rose    { background: var(--rose-100); color: var(--rose-600); }
+
+.stat-info-wrap .stat-num {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--slate-900);
+  line-height: 1.1;
+}
+
+.stat-info-wrap .stat-title {
+  font-size: 13px;
+  color: var(--slate-500);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Comparison Head-to-Head Section */
+.comparison-head-to-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.system-card {
+  border-radius: var(--border-radius-lg);
+  padding: 28px;
+  border: 1px solid;
+}
+
+.manual-system-card {
+  background: #fff8f8;
+  border-color: #fecdd3;
+}
+
+.smart-system-card {
+  background: #f0fdf4;
+  border-color: var(--emerald-200);
+  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.08);
+}
+
+.system-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.system-badge-danger {
+  background: var(--rose-100);
+  color: var(--rose-600);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
+.system-badge-success {
+  background: var(--emerald-100);
+  color: var(--emerald-800);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
+.system-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--slate-900);
+}
+
+.feature-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 13.5px;
+  margin-top: 14px;
+}
+
+.feature-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.feature-list li i {
+  margin-top: 3px;
+}
+
+/* Home Modules Grid */
+.home-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.module-intro-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: var(--transition);
+}
+
+.module-intro-card:hover {
+  border-color: var(--emerald-400);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.module-card-top {
+  margin-bottom: 20px;
+}
+
+.module-badge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.module-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--emerald-700);
+  background: var(--emerald-50);
+  padding: 3px 10px;
+  border-radius: 9999px;
+}
+
+.module-intro-card h3 {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--slate-900);
+  margin-bottom: 8px;
+}
+
+.module-intro-card p {
+  font-size: 13.5px;
+  color: var(--slate-600);
+  line-height: 1.5;
+}
+
+.complexity-summary-box {
+  background: var(--slate-50);
+  border-radius: var(--border-radius-md);
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--slate-700);
+  margin-top: 12px;
+  font-family: monospace;
+}
+
+/* ==========================================================================
+   2. PRODUCT DATA MANAGEMENT STYLES
+   ========================================================================== */
+.table-toolbar {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  padding: 18px 24px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.toolbar-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.search-box {
+  position: relative;
+  min-width: 240px;
+}
+
+.search-box i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--slate-400);
+  font-size: 14px;
+}
+
+.input-search {
+  width: 100%;
+  padding: 9px 12px 9px 36px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--slate-300);
+  font-size: 13.5px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.input-search:focus {
+  border-color: var(--emerald-500);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.filter-select {
+  padding: 9px 12px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--slate-300);
+  font-size: 13.5px;
+  background-color: var(--white);
+  color: var(--slate-700);
+  outline: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.filter-select:focus {
+  border-color: var(--emerald-500);
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Data Table */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--slate-200);
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13.5px;
+}
+
+.data-table th {
+  background: var(--slate-50);
+  color: var(--slate-600);
+  font-weight: 700;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--slate-200);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--slate-100);
+  vertical-align: middle;
+}
+
+.data-table tr:hover td {
+  background-color: #fafcfb;
+}
+
+.product-name-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.discount-pill {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 10.5px;
+  font-weight: 700;
+  background: var(--rose-100);
+  color: var(--rose-600);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.category-chip {
+  background: var(--slate-100);
+  color: var(--slate-700);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Vendor Badges */
+.vendor-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.vendor-dmart           { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+.vendor-saravanastores  { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+.vendor-reliancemart    { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.vendor-moresupermarket { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
+.vendor-spencers        { background: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff; }
+.vendor-bigbasket       { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+.vendor-aldi            { background: #e0f2fe; color: #0369a1; }
+.vendor-walmart         { background: #eff6ff; color: #1d4ed8; }
+.vendor-target          { background: #fee2e2; color: #b91c1c; }
+.vendor-kroger          { background: #fef3c7; color: #b45309; }
+.vendor-wholefoods      { background: #dcfce7; color: #15803d; }
+.vendor-traderjoes      { background: #ffedd5; color: #c2410c; }
+
+/* Availability Badges */
+.availability-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 9999px;
+}
+
+.status-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.badge-instock {
+  background: var(--emerald-50);
+  color: var(--emerald-700);
+}
+.badge-instock .status-indicator { background: var(--emerald-500); }
+
+.badge-limited {
+  background: var(--amber-100);
+  color: var(--amber-500);
+}
+.badge-limited .status-indicator { background: var(--amber-500); }
+
+.badge-outofstock {
+  background: var(--rose-100);
+  color: var(--rose-600);
+}
+.badge-outofstock .status-indicator { background: var(--rose-500); }
+
+.action-buttons-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+/* ==========================================================================
+   3. PRICE COMPARISON & MIN HEAP RANKING
+   ========================================================================== */
+.comparison-selector-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.selector-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.select-large {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: var(--border-radius-md);
+  border: 2px solid var(--emerald-500);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--slate-800);
+  background-color: var(--white);
+  outline: none;
+}
+
+/* Root Showcase Card */
+.root-showcase-card {
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  border: 2px solid var(--emerald-500);
+  border-radius: var(--border-radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.12);
+}
+
+.root-badge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.crown-icon {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--emerald-800);
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.root-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.root-price-val {
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--emerald-800);
+  line-height: 1;
+}
+
+.root-unit-text {
+  font-size: 14px;
+  color: var(--emerald-700);
+  font-weight: 600;
+}
+
+.root-savings-banner {
+  background: var(--white);
+  border-radius: var(--border-radius-md);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--slate-700);
+  border: 1px solid var(--emerald-200);
+}
+
+/* Metrics Grid */
+.comparison-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.metric-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-md);
+  padding: 16px 20px;
+}
+
+.metric-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--slate-500);
+  letter-spacing: 0.03em;
+}
+
+.metric-value {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 4px 0 2px;
+  color: var(--slate-900);
+}
+
+.metric-sub {
+  font-size: 12px;
+  color: var(--slate-500);
+}
+
+/* Comparison Layout: 2 Columns */
+.comparison-two-col {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 24px;
+}
+
+/* Ascending Ranked Vendors */
+.ranked-vendors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ranked-vendor-row {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-md);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: var(--transition);
+}
+
+.ranked-vendor-row:hover {
+  border-color: var(--emerald-300);
+  background: #fcfdfd;
+}
+
+.ranked-root-highlight {
+  border-color: var(--emerald-400);
+  background: #f0fdf4;
+}
+
+.rank-position {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--slate-400);
+  width: 32px;
+}
+
+.ranked-root-highlight .rank-position {
+  color: var(--emerald-700);
+}
+
+.rank-vendor-info {
+  flex: 1;
+}
+
+.rank-vendor-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.rank-avail-text {
+  font-size: 11px;
+  color: var(--slate-400);
+}
+
+.rank-price-info {
+  text-align: right;
+  min-width: 100px;
+}
+
+.rank-price-val {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--slate-900);
+}
+
+.badge-best-root {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--emerald-700);
+}
+
+.badge-more-expensive {
+  font-size: 11px;
+  color: var(--rose-600);
+  font-weight: 600;
+}
+
+/* Heap Execution Trace Logs */
+.heap-logs-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+}
+
+.logs-scroll-box {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 16px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-family: 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.heap-log-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.log-step {
+  color: #34d399;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   4. MIN HEAP VISUALIZER STYLES
+   ========================================================================== */
+.visualizer-sandbox-toolbar {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sandbox-input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.input-num {
+  width: 110px;
+  padding: 9px 12px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--slate-300);
+  font-size: 13.5px;
+}
+
+.visualizer-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.heap-tree-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.tree-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--slate-100);
+}
+
+.tree-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--slate-900);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tree-legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 12px;
+}
+
+.legend-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.root-dot { background: var(--emerald-600); }
+.child-dot { background: var(--emerald-400); }
+.heap-size-badge {
+  background: var(--slate-100);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.svg-tree-container {
+  width: 100%;
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
+  padding: 16px 0;
+  background: #fcfdfc;
+  border-radius: var(--border-radius-md);
+  border: 1px dashed var(--slate-200);
+}
+
+.heap-svg {
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+  overflow: visible;
+}
+
+.tree-node-group {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.tree-node-group:hover {
+  transform: scale(1.08);
+}
+
+.node-halo {
+  stroke: var(--emerald-400);
+  stroke-width: 0;
+  transition: stroke-width 0.2s;
+}
+
+.tree-node-group:hover .node-halo,
+.highlighted-node .node-halo {
+  stroke-width: 4px;
+}
+
+/* Array Representation Section */
+.heap-array-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+}
+
+.array-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.formula-chips {
+  display: flex;
+  gap: 8px;
+}
+
+.formula-chip {
+  background: var(--emerald-50);
+  border: 1px solid var(--emerald-200);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  color: var(--emerald-900);
+}
+
+.formula-chip code {
+  font-weight: 700;
+  color: var(--emerald-700);
+}
+
+.array-grid-container {
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.heap-array-flex {
+  display: flex;
+  gap: 12px;
+  min-width: max-content;
+}
+
+.array-cell-card {
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-md);
+  padding: 12px 14px;
+  min-width: 105px;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.array-cell-card:hover,
+.array-card-active {
+  border-color: var(--emerald-500);
+  background: var(--emerald-50);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.array-cell-root {
+  border-color: var(--emerald-500);
+  background: #f0fdf4;
+}
+
+.cell-index-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.cell-value-price {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--slate-900);
+}
+
+.cell-vendor-name {
+  font-size: 11px;
+  color: var(--emerald-700);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.cell-pointers {
+  display: flex;
+  justify-content: space-around;
+  font-size: 9.5px;
+  color: var(--slate-400);
+  border-top: 1px solid var(--slate-200);
+  padding-top: 4px;
+  margin-top: 4px;
+}
+
+/* Empty State */
+.empty-visualizer {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--slate-500);
+}
+
+.empty-icon {
+  font-size: 48px;
+  color: var(--emerald-500);
+  margin-bottom: 16px;
+}
+
+.empty-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--slate-800);
+  margin-bottom: 6px;
+}
+
+.empty-desc {
+  font-size: 13.5px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   5. RECOMMENDATION & USER DASHBOARD STYLES
+   ========================================================================== */
+.dashboard-grid-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+/* Leaderboard */
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--slate-200);
+  background: var(--white);
+  transition: var(--transition);
+}
+
+.leaderboard-champion {
+  background: #f0fdf4;
+  border-color: var(--emerald-300);
+}
+
+.leaderboard-rank {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--slate-400);
+  width: 28px;
+}
+
+.leaderboard-champion .leaderboard-rank {
+  color: var(--emerald-700);
+}
+
+.leaderboard-info {
+  flex: 1;
+}
+
+.leaderboard-score {
+  text-align: right;
+}
+
+.score-badge {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--emerald-700);
+}
+
+.score-sub {
+  font-size: 10.5px;
+  color: var(--slate-400);
+}
+
+/* Best Deals */
+.deals-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.deal-card {
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-md);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.deal-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--rose-600);
+  background: var(--rose-100);
+  padding: 2px 6px;
+  border-radius: 4px;
+  align-self: flex-start;
+  margin-bottom: 6px;
+}
+
+.deal-prod-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate-800);
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+
+.deal-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.deal-price {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--emerald-700);
+}
+
+/* Basket / Cart Simulator */
+.basket-simulator-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+
+.basket-layout {
+  display: grid;
+  grid-template-columns: 1.3fr 0.9fr;
+}
+
+.basket-left-panel {
+  padding: 24px;
+  border-right: 1px solid var(--slate-100);
+}
+
+.basket-right-panel {
+  padding: 24px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.basket-add-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.basket-items-scroll {
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.basket-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-md);
+}
+
+.basket-item-title {
+  flex: 1;
+  font-size: 13.5px;
+}
+
+.basket-qty {
+  font-size: 12px;
+  color: var(--slate-500);
+  padding: 0 16px;
+}
+
+.basket-subtotal {
+  font-size: 15px;
+  padding: 0 12px;
+}
+
+.btn-icon-danger {
+  background: none;
+  border: none;
+  color: var(--slate-400);
+  cursor: pointer;
+  padding: 6px;
+}
+
+.btn-icon-danger:hover {
+  color: var(--rose-600);
+}
+
+/* Savings Summary Card in Basket */
+.savings-summary-box {
+  background: var(--white);
+  border: 2px solid var(--emerald-500);
+  border-radius: var(--border-radius-md);
+  padding: 20px;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 13.5px;
+}
+
+.line-border {
+  border-bottom: 1px solid var(--slate-100);
+}
+
+.text-savings-highlight {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--emerald-700);
+}
+
+/* Charts Section */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.chart-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 280px;
+  width: 100%;
+}
+
+/* ==========================================================================
+   6. ABOUT PROJECT & COMPLEXITY STYLES
+   ========================================================================== */
+.about-hero-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  padding: 36px;
+  margin-bottom: 32px;
+}
+
+.about-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--emerald-100);
+  color: var(--emerald-800);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  margin-bottom: 12px;
+}
+
+.about-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--slate-900);
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+
+.about-lead {
+  font-size: 15px;
+  color: var(--slate-600);
+  line-height: 1.6;
+}
+
+/* Architecture Flowchart */
+.architecture-flowchart-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  padding: 32px;
+  margin-bottom: 32px;
+}
+
+.flowchart-nodes-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.flow-node {
+  flex: 1;
+  min-width: 180px;
+  background: #f8fafc;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-md);
+  padding: 18px;
+  text-align: center;
+  position: relative;
+}
+
+.flow-node-active {
+  background: #f0fdf4;
+  border-color: var(--emerald-400);
+}
+
+.flow-icon {
+  font-size: 24px;
+  color: var(--emerald-600);
+  margin-bottom: 8px;
+}
+
+.flow-node-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--slate-900);
+  margin-bottom: 4px;
+}
+
+.flow-node-desc {
+  font-size: 11.5px;
+  color: var(--slate-500);
+}
+
+.flow-connector {
+  font-size: 20px;
+  color: var(--slate-400);
+}
+
+/* Modules Complexity Deep Dive */
+.modules-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.module-deep-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  padding: 24px 28px;
+}
+
+.module-deep-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.module-deep-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--slate-900);
+}
+
+.complexity-tag-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.complexity-chip-time {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.complexity-chip-space {
+  background: #fdf4ff;
+  border: 1px solid #f5d0fe;
+  color: #a21caf;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.module-deep-card p {
+  font-size: 14px;
+  color: var(--slate-600);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.math-explanation-box {
+  background: var(--slate-50);
+  border-left: 4px solid var(--emerald-500);
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--slate-700);
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+}
+
+/* Comparison Table */
+.complexity-table-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--border-radius-lg);
+  padding: 28px;
+  margin-bottom: 32px;
+}
+
+.complexity-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  margin-top: 18px;
+}
+
+.complexity-table th {
+  background: var(--slate-50);
+  color: var(--slate-700);
+  font-weight: 700;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--slate-200);
+  text-align: left;
+}
+
+.complexity-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--slate-100);
+  vertical-align: middle;
+}
+
+.complexity-table tr.highlight-row {
+  background-color: #f0fdf4;
+  font-weight: 600;
+}
+
+.complexity-table tr.highlight-row td {
+  color: var(--emerald-900);
+  border-color: var(--emerald-200);
+}
+
+/* ==========================================================================
+   MODAL DIALOG STYLES
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+.hidden-modal {
+  display: none !important;
+}
+
+.modal-dialog {
+  background: var(--white);
+  border-radius: var(--border-radius-xl);
+  width: 100%;
+  max-width: 540px;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  overflow: hidden;
+  animation: modalPop 0.25s ease;
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--slate-100);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--slate-900);
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--slate-400);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.modal-close-btn:hover {
+  color: var(--slate-700);
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group-full {
+  grid-column: span 2;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate-700);
+}
+
+.form-input {
+  padding: 9px 12px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--slate-300);
+  font-size: 13.5px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.form-input:focus {
+  border-color: var(--emerald-500);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--slate-100);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  background: var(--slate-50);
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATIONS
+   ========================================================================== */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast-pill {
+  background: var(--slate-900);
+  color: var(--white);
+  padding: 12px 18px;
+  border-radius: var(--border-radius-lg);
+  font-size: 13.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
+  animation: slideUp 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast-success {
+  background: #064e3b;
+  border-left: 4px solid var(--emerald-400);
+}
+
+.toast-error {
+  background: #4c0519;
+  border-left: 4px solid var(--rose-500);
+}
+
+.toast-fadeout {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (MEDIA QUERIES)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .comparison-two-col,
+  .basket-layout,
+  .dashboard-grid-top,
+  .charts-grid,
+  .comparison-head-to-head {
+    grid-template-columns: 1fr;
+  }
+
+  .basket-left-panel {
+    border-right: none;
+    border-bottom: 1px solid var(--slate-100);
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
+  }
+
+  .main-wrapper {
+    margin-left: 0;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .content-body {
+    padding: 20px 16px 40px;
+  }
+
+  .hero-card {
+    padding: 28px 20px;
+  }
+
+  .hero-title {
+    font-size: 24px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group-full {
+    grid-column: span 1;
+  }
+
+  .table-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    min-width: 100%;
+  }
+}
+
+</style>
+</head>
+<body>
+
+  <!-- App Shell -->
+  <div class="app-container">
+
+    <!-- ====================================================================
+         SIDEBAR NAVIGATION
+         ==================================================================== -->
+    <aside class="sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon">
+          <i class="fa-solid fa-basket-shopping"></i>
+        </div>
+        <div class="brand-text">
+          <h1>SmartGrocery</h1>
+          <span class="brand-badge">Min-Heap Engine</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-category">Core Platform</div>
+        <a href="#home" class="nav-link active" data-section="home">
+          <i class="fa-solid fa-house"></i>
+          <span>Home Overview</span>
+        </a>
+        <a href="#products" class="nav-link" data-section="products">
+          <i class="fa-solid fa-boxes-stacked"></i>
+          <span>Product Inventory</span>
+        </a>
+
+        <div class="nav-category">Algorithms & DS</div>
+        <a href="#compare" class="nav-link" data-section="compare">
+          <i class="fa-solid fa-scale-balanced"></i>
+          <span>Price Comparison</span>
+        </a>
+        <a href="#visualizer" class="nav-link" data-section="visualizer">
+          <i class="fa-solid fa-sitemap"></i>
+          <span>Min-Heap Visualizer</span>
+        </a>
+
+        <div class="nav-category">Analytics & Research</div>
+        <a href="#dashboard" class="nav-link" data-section="dashboard">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Savings & Analytics</span>
+        </a>
+        <a href="#about" class="nav-link" data-section="about">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span>About Project & DS</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="academic-tag">
+          <strong>Data Structures Project</strong>
+          <span>Min-Heap Priority Queue Optimization</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ====================================================================
+         MAIN VIEWPORT WRAPPER
+         ==================================================================== -->
+    <div class="main-wrapper">
+
+      <!-- Academic Demonstration Banner -->
+      <div class="demo-banner">
+        <div class="demo-banner-content">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span><strong>College Demonstration Mode:</strong> Indian retail prices are simulated across D-Mart, Saravana Stores, Reliance Mart, More, Spencer's, and BigBasket in Indian Rupees (₹) to evaluate Min-Heap algorithmic efficiency.</span>
+        </div>
+        <span class="badge-instock text-xs"><i class="fa-solid fa-database"></i> LocalStorage Persistent</span>
+      </div>
+
+      <!-- Top Header Bar -->
+      <header class="top-header">
+        <div class="header-title-bar">
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="header-page-title" id="topHeaderTitle">Grocery Cost Savings Optimization System</div>
+        </div>
+        <div class="header-actions">
+          <div class="live-badge">
+            <span class="live-pulse"></span>
+            <span>Priority Queue Active</span>
+          </div>
+          <button class="btn btn-outline-emerald btn-sm" onclick="App.navigateTo('compare')">
+            <i class="fa-solid fa-bolt"></i> Quick Compare
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Scrollable Content Body -->
+      <main class="content-body">
+
+        <!-- ================================================================
+             SECTION 1: HOME PAGE
+             ================================================================ -->
+        <section id="section-home" class="page-section">
+          <!-- Hero Section -->
+          <div class="hero-card">
+            <div class="hero-tag">
+              <i class="fa-solid fa-award"></i>
+              <span>Data Structures & Algorithms Research Demonstration</span>
+            </div>
+            <h1 class="hero-title">
+              Enhancing Grocery Cost Savings Using a Smart Grocery Price Comparison System Compared with Traditional Manual Price Comparison
+            </h1>
+            <p class="hero-subtitle">
+              A high-performance algorithmic comparison platform that ingests multi-vendor grocery data, organizes price variations into a binary Min-Heap Priority Queue, and achieves instant \(O(1)\) cheapest vendor retrieval with \(O(n \log n)\) ascending cost ranking.
+            </p>
+            <div class="hero-cta-group">
+              <button class="btn btn-hero-white btn-lg" onclick="App.navigateTo('compare')">
+                <i class="fa-solid fa-scale-balanced"></i> Start Price Comparison
+              </button>
+              <button class="btn btn-hero-outline btn-lg" onclick="App.navigateTo('visualizer')">
+                <i class="fa-solid fa-sitemap"></i> Explore Min-Heap Tree
+              </button>
+              <button class="btn btn-hero-outline btn-lg" onclick="App.navigateTo('about')">
+                <i class="fa-solid fa-book-open"></i> Read Complexity Analysis
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Metrics Bar -->
+          <div class="stats-grid">
+            <div class="stat-metric-card">
+              <div class="stat-icon-wrap icon-emerald">
+                <i class="fa-solid fa-boxes-packing"></i>
+              </div>
+              <div class="stat-info-wrap">
+                <div class="stat-num" id="statTotalProducts">60</div>
+                <div class="stat-title">Tracked Offerings</div>
+              </div>
+            </div>
+
+            <div class="stat-metric-card">
+              <div class="stat-icon-wrap icon-blue">
+                <i class="fa-solid fa-layer-group"></i>
+              </div>
+              <div class="stat-info-wrap">
+                <div class="stat-num" id="statUniqueItems">10</div>
+                <div class="stat-title">Cross-Vendor Items</div>
+              </div>
+            </div>
+
+            <div class="stat-metric-card">
+              <div class="stat-icon-wrap icon-amber">
+                <i class="fa-solid fa-shop"></i>
+              </div>
+              <div class="stat-info-wrap">
+                <div class="stat-num" id="statTotalVendors">6</div>
+                <div class="stat-title">Retail Vendors</div>
+              </div>
+            </div>
+
+            <div class="stat-metric-card">
+              <div class="stat-icon-wrap icon-blue">
+                <i class="fa-solid fa-tags"></i>
+              </div>
+              <div class="stat-info-wrap">
+                <div class="stat-num" id="statCategories">6</div>
+                <div class="stat-title">Categories</div>
+              </div>
+            </div>
+
+            <div class="stat-metric-card">
+              <div class="stat-icon-wrap icon-rose">
+                <i class="fa-solid fa-piggy-bank"></i>
+              </div>
+              <div class="stat-info-wrap">
+                <div class="stat-num" id="statPotentialSavings">₹380.00</div>
+                <div class="stat-title">Potential Max Savings</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Head-to-Head Comparative Overview -->
+          <div class="comparison-head-to-head">
+            <div class="system-card manual-system-card">
+              <div class="system-card-header">
+                <span class="system-badge-danger"><i class="fa-solid fa-xmark"></i> Traditional Approach</span>
+                <h3 class="system-title">Manual Price Comparison</h3>
+              </div>
+              <p class="text-sm text-slate-600">
+                Shoppers manually collect paper circulars, browse disconnected supermarket apps, or perform repetitive store visits to find discounts.
+              </p>
+              <ul class="feature-list">
+                <li><i class="fa-solid fa-circle-xmark text-rose-500"></i> <span><strong>High Cognitive Fatigue:</strong> Comparing \(m\) items across \(v\) stores requires \(O(m \times v)\) manual searches.</span></li>
+                <li><i class="fa-solid fa-circle-xmark text-rose-500"></i> <span><strong>Error Prone:</strong> Consumers frequently miss rollbacks, digital coupons, or unadvertised specials.</span></li>
+                <li><i class="fa-solid fa-circle-xmark text-rose-500"></i> <span><strong>Suboptimal Basket:</strong> Shoppers buy all groceries at a single store, spending 20%–35% more on average.</span></li>
+                <li><i class="fa-solid fa-circle-xmark text-rose-500"></i> <span><strong>Zero Automation:</strong> Cannot dynamically recompute savings when product prices change.</span></li>
+              </ul>
+            </div>
+
+            <div class="system-card smart-system-card">
+              <div class="system-card-header">
+                <span class="system-badge-success"><i class="fa-solid fa-check"></i> Proposed System</span>
+                <h3 class="system-title">Smart Min-Heap Priority System</h3>
+              </div>
+              <p class="text-sm text-slate-600">
+                Aggregates multi-vendor price points into a binary Min-Heap data structure to guarantee mathematical cost optimality.
+              </p>
+              <ul class="feature-list">
+                <li><i class="fa-solid fa-circle-check text-emerald-600"></i> <span><strong>Instant Root Retrieval \(O(1)\):</strong> The cheapest vendor is always preserved at the root node of the Min-Heap.</span></li>
+                <li><i class="fa-solid fa-circle-check text-emerald-600"></i> <span><strong>Efficient Updates \(O(\log n)\):</strong> Rapid insertion and heapify-up/down operations allow real-time price synchronization.</span></li>
+                <li><i class="fa-solid fa-circle-check text-emerald-600"></i> <span><strong>Optimal Basket Splitting:</strong> Aggregates global minimums to project hundreds of dollars in annual grocery savings.</span></li>
+                <li><i class="fa-solid fa-circle-check text-emerald-600"></i> <span><strong>Algorithmic Transparency:</strong> Visual binary tree display with complete execution traces for academic demonstration.</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Modules Navigation Grid -->
+          <div class="section-header mt-8">
+            <div class="section-header-left">
+              <h2>System Architecture & Core Modules</h2>
+              <p>Explore the three foundational modules analyzed in our presentation.</p>
+            </div>
+          </div>
+
+          <div class="home-modules-grid">
+            <!-- Module 1 -->
+            <div class="module-intro-card">
+              <div class="module-card-top">
+                <div class="module-badge-row">
+                  <span class="module-num">Module 1</span>
+                  <span class="complexity-pill"><i class="fa-solid fa-clock"></i> O(n) Processing</span>
+                </div>
+                <h3>Product Data Management</h3>
+                <p>
+                  Facilitates verified catalog inspection, multi-filter search, category indexing, and vendor price tracking across Indian stores.
+                </p>
+                <div class="complexity-summary-box">
+                  Time: <strong>O(n)</strong> | Space: <strong>O(n)</strong>
+                </div>
+              </div>
+              <button class="btn btn-outline-emerald w-full" onclick="App.navigateTo('products')">
+                <span>Explore Catalog</span> <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <!-- Module 2 -->
+            <div class="module-intro-card">
+              <div class="module-card-top">
+                <div class="module-badge-row">
+                  <span class="module-num">Module 2</span>
+                  <span class="complexity-pill"><i class="fa-solid fa-bolt"></i> O(log n) Heapify</span>
+                </div>
+                <h3>Min-Heap Price Ranking</h3>
+                <p>
+                  Implements a real binary Min-Heap priority queue where vendor offerings are organized such that the lowest price sits at the root node.
+                </p>
+                <div class="complexity-summary-box">
+                  Insert/Extract: <strong>O(log n)</strong> | Ranking: <strong>O(n log n)</strong> | Space: <strong>O(n)</strong>
+                </div>
+              </div>
+              <button class="btn btn-outline-emerald w-full" onclick="App.navigateTo('compare')">
+                <span>Compare Prices</span> <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <!-- Module 3 -->
+            <div class="module-intro-card">
+              <div class="module-card-top">
+                <div class="module-badge-row">
+                  <span class="module-num">Module 3</span>
+                  <span class="complexity-pill"><i class="fa-solid fa-calculator"></i> O(log n) Extraction</span>
+                </div>
+                <h3>Recommendation & Savings Engine</h3>
+                <p>
+                  Computes net grocery basket savings, identifies dominant discount vendors, and projects annualized household budget savings.
+                </p>
+                <div class="complexity-summary-box">
+                  Min Extraction: <strong>O(log n)</strong> | Space: <strong>O(n)</strong>
+                </div>
+              </div>
+              <button class="btn btn-outline-emerald w-full" onclick="App.navigateTo('dashboard')">
+                <span>View Analytics</span> <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 2: PRODUCT DATA MANAGEMENT MODULE
+             ================================================================ -->
+        <section id="section-products" class="page-section hidden-section">
+          <div class="section-header">
+            <div class="section-header-left">
+              <h2>Module 1: Product Data Management</h2>
+              <p>Search, inspect, and filter verified multi-vendor grocery items across retail stores for Min-Heap price comparison.</p>
+            </div>
+            <div class="complexity-pill">
+              <i class="fa-solid fa-microchip"></i>
+              <span>Complexity: O(n) Processing &amp; O(n) Space</span>
+            </div>
+          </div>
+
+          <!-- Table Toolbar -->
+          <div class="table-toolbar">
+            <div class="toolbar-filters">
+              <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input 
+                  type="text" 
+                  id="productSearchInput" 
+                  class="input-search" 
+                  placeholder="Search by product name, category, or vendor..." 
+                />
+              </div>
+
+              <select id="productCategoryFilter" class="filter-select">
+                <option value="ALL">All Categories</option>
+              </select>
+
+              <select id="productVendorFilter" class="filter-select">
+                <option value="ALL">All Vendors</option>
+              </select>
+
+              <select id="productAvailabilityFilter" class="filter-select">
+                <option value="ALL">All Availability</option>
+                <option value="In Stock">In Stock</option>
+                <option value="Limited Stock">Limited Stock</option>
+                <option value="Out of Stock">Out of Stock</option>
+              </select>
+
+              <select id="productSortSelect" class="filter-select">
+                <option value="name_asc">Product Name (A-Z)</option>
+                <option value="name_desc">Product Name (Z-A)</option>
+                <option value="price_asc">Price: Lowest First</option>
+                <option value="price_desc">Price: Highest First</option>
+                <option value="vendor_asc">Vendor (A-Z)</option>
+              </select>
+            </div>
+
+            <div class="toolbar-actions">
+              <button class="btn btn-outline-emerald btn-sm" onclick="App.resetDemoData()" title="Restore Original Demo Catalog">
+                <i class="fa-solid fa-rotate-left"></i> Reset Demo Data
+              </button>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center mb-3 text-xs text-slate-500 font-semibold">
+            <span id="productCountBadge">Loading products...</span>
+            <span><i class="fa-solid fa-shield-halved text-emerald-600"></i> Verified Reference Dataset (Read-Only)</span>
+          </div>
+
+          <!-- Data Table -->
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>Vendor Store</th>
+                  <th>Unit Price</th>
+                  <th>Availability</th>
+                  <th>Last Sync</th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="productTableBody">
+                <!-- Dynamically populated by App.renderProductTable() -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 3: PRICE COMPARISON AND RANKING MODULE
+             ================================================================ -->
+        <section id="section-compare" class="page-section hidden-section">
+          <div class="section-header">
+            <div class="section-header-left">
+              <h2>Module 2: Price Comparison &amp; Min-Heap Ranking</h2>
+              <p>Compare identical grocery items across retail stores using an authentic binary Min-Heap Priority Queue.</p>
+            </div>
+            <div class="complexity-pill">
+              <i class="fa-solid fa-network-wired"></i>
+              <span>O(log n) Insertion/Extraction &bull; O(n log n) Ranking &bull; O(n) Space</span>
+            </div>
+          </div>
+
+          <!-- Product Selection Control Card -->
+          <div class="comparison-selector-card">
+            <label for="comparisonProductSelect" class="form-label mb-2 block font-bold text-slate-700">
+              <i class="fa-solid fa-crosshairs text-emerald-600"></i> Select Grocery Product to Build Min-Heap:
+            </label>
+            <div class="selector-row">
+              <select id="comparisonProductSelect" class="select-large">
+                <!-- Populated dynamically -->
+              </select>
+              <button class="btn btn-primary btn-lg" onclick="App.runDefaultComparison()">
+                <i class="fa-solid fa-play"></i> Run Min-Heap
+              </button>
+              <button class="btn btn-outline-emerald btn-lg" onclick="App.viewHeapInVisualizer()">
+                <i class="fa-solid fa-sitemap"></i> View Tree
+              </button>
+            </div>
+          </div>
+
+          <!-- Results Container -->
+          <div id="comparisonResultsContainer">
+            <!-- Root Showcase Card (Cheapest Price Root) -->
+            <div id="minHeapRootHighlight">
+              <!-- Populated dynamically -->
+            </div>
+
+            <!-- Summary Metrics Cards -->
+            <div class="comparison-metrics-grid" id="comparisonMetricsGrid">
+              <!-- Populated dynamically -->
+            </div>
+
+            <!-- Two-Column Layout: Ascending Ranking + Live Heap Operation Logs -->
+            <div class="comparison-two-col">
+              <!-- Column 1: Ascending Price Ranking -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">
+                    <i class="fa-solid fa-arrow-down-short-wide text-emerald-600"></i>
+                    <span>Ascending Price Ranking (Heap Sort Extraction)</span>
+                  </div>
+                  <span class="text-xs text-slate-500 font-semibold">Continuous Extract-Min: O(n log n)</span>
+                </div>
+                <div class="card-body">
+                  <div class="ranked-vendors-list" id="ascendingRankedVendors">
+                    <!-- Populated dynamically -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Column 2: Real-time Min-Heap Operation Log -->
+              <div class="card heap-logs-card">
+                <div class="card-header">
+                  <div class="card-title">
+                    <i class="fa-solid fa-terminal text-emerald-600"></i>
+                    <span>Min-Heap Execution Trace</span>
+                  </div>
+                  <span class="badge-instock text-xs">Step-by-step Swaps</span>
+                </div>
+                <div class="logs-scroll-box" id="heapLogsOutput">
+                  <!-- Populated dynamically -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 4: MIN HEAP VISUALIZATION & INTERACTIVE SANDBOX
+             ================================================================ -->
+        <section id="section-visualizer" class="page-section hidden-section">
+          <div class="section-header">
+            <div class="section-header-left">
+              <h2>Module 2/4: Min-Heap Interactive Visualizer</h2>
+              <p>Dynamic Complete Binary Tree and Linear Array representation updating dynamically with insertions and extractions.</p>
+            </div>
+            <div class="complexity-pill">
+              <i class="fa-solid fa-tree"></i>
+              <span>Tree Height: h = &lfloor;log&sub2; n&rfloor; &bull; Root = Global Minimum</span>
+            </div>
+          </div>
+
+          <!-- Visualizer Interactive Sandbox Toolbar -->
+          <div class="visualizer-sandbox-toolbar">
+            <div class="sandbox-input-group">
+              <label class="form-label font-bold text-slate-700">Sandbox Controls:</label>
+              <input type="number" id="sandboxPriceInput" class="input-num" placeholder="Price (₹)" step="1" min="1" value="239.00" />
+              <input type="text" id="sandboxVendorInput" class="form-input" placeholder="Vendor Label" style="width: 140px;" value="D-Mart" />
+              <button class="btn btn-primary btn-sm" onclick="App.sandboxInsert()">
+                <i class="fa-solid fa-plus"></i> Insert (Heapify Up)
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="App.sandboxExtractMin()">
+                <i class="fa-solid fa-minus"></i> Extract Min (Heapify Down)
+              </button>
+            </div>
+
+            <div class="toolbar-actions">
+              <button class="btn btn-secondary btn-sm" onclick="App.sandboxClear()">
+                <i class="fa-regular fa-trash-can"></i> Clear Heap
+              </button>
+              <button class="btn btn-outline-emerald btn-sm" onclick="App.runDefaultComparison()">
+                <i class="fa-solid fa-arrows-rotate"></i> Sync Comparison Item
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Visualizer Container (Tree SVG + Array Grid) -->
+          <div id="treeVisualizerContainer">
+            <!-- Rendered by HeapVisualizer class -->
+          </div>
+
+          <!-- Sandbox Live Console Trace -->
+          <div class="card mt-6">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-code text-emerald-600"></i>
+                <span>Interactive Sandbox Step Logs</span>
+              </div>
+              <span class="text-xs text-slate-400">Restoring Min-Heap Invariant</span>
+            </div>
+            <div class="card-body">
+              <div id="sandboxLogs" class="space-y-2 font-mono text-xs text-slate-700">
+                <p class="text-slate-500">Insert new prices or trigger Extract-Min above to inspect bubble-up and bubble-down transitions.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 5: RECOMMENDATION & USER DASHBOARD
+             ================================================================ -->
+        <section id="section-dashboard" class="page-section hidden-section">
+          <div class="section-header">
+            <div class="section-header-left">
+              <h2>Module 3: Recommendation &amp; Savings Analytics</h2>
+              <p>Identify optimal supermarket chains, evaluate rollbacks, and simulate total basket cost savings.</p>
+            </div>
+            <div class="complexity-pill">
+              <i class="fa-solid fa-coins"></i>
+              <span>O(log n) Extraction &bull; O(n) Space</span>
+            </div>
+          </div>
+
+          <!-- Top Analytics: Cheapest Store Leaderboard + Best Deals -->
+          <div class="dashboard-grid-top">
+            <!-- Cheapest Store Leaderboard -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  <i class="fa-solid fa-trophy text-amber-500"></i>
+                  <span>Cheapest Vendor Leaderboard</span>
+                </div>
+                <span class="text-xs text-slate-500">Min-Heap Root Frequency</span>
+              </div>
+              <div class="card-body">
+                <div class="leaderboard-list" id="cheapestVendorsLeaderboard">
+                  <!-- Populated dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Best Deals & Rollbacks -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">
+                  <i class="fa-solid fa-tags text-rose-500"></i>
+                  <span>Active Discounts &amp; Rollbacks</span>
+                </div>
+                <span class="text-xs text-emerald-700 font-semibold">Special Promotions</span>
+              </div>
+              <div class="card-body">
+                <div class="deals-grid" id="bestDealsContainer">
+                  <!-- Populated dynamically -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Grocery Basket Simulator -->
+          <div class="basket-simulator-card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-basket-shopping text-emerald-600"></i>
+                <span>Smart Grocery Basket Cost Optimizer</span>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="App.clearBasket()">
+                <i class="fa-regular fa-trash-can"></i> Clear Basket
+              </button>
+            </div>
+
+            <div class="basket-layout">
+              <!-- Left: Basket Item List & Add form -->
+              <div class="basket-left-panel">
+                <div class="basket-add-bar">
+                  <select id="addBasketSelect" class="filter-select flex-1">
+                    <!-- Populated dynamically -->
+                  </select>
+                  <button class="btn btn-primary btn-sm" onclick="App.addCustomBasketItem()">
+                    <i class="fa-solid fa-cart-plus"></i> Add to Basket
+                  </button>
+                </div>
+
+                <div class="basket-items-scroll" id="basketItemsList">
+                  <!-- Populated dynamically -->
+                </div>
+              </div>
+
+              <!-- Right: Comparative Total Calculations -->
+              <div class="basket-right-panel">
+                <div class="savings-summary-box">
+                  <div class="summary-line line-border">
+                    <span class="text-slate-600 font-medium">Smart Min-Heap Optimal:</span>
+                    <strong class="text-xl text-emerald-700" id="basketSmartTotal">₹0.00</strong>
+                  </div>
+                  <div class="summary-line line-border">
+                    <span class="text-slate-600 font-medium">Worst Vendor (Manual Pick):</span>
+                    <strong class="text-base text-rose-600" id="basketWorstTotal">₹0.00</strong>
+                  </div>
+                  <div class="summary-line line-border">
+                    <span class="text-slate-800 font-bold">Net Basket Savings:</span>
+                    <strong class="text-savings-highlight" id="basketNetSavings">₹0.00 (0.0%)</strong>
+                  </div>
+                  <div class="summary-line pt-3">
+                    <span class="text-emerald-900 font-semibold"><i class="fa-solid fa-calendar-check"></i> Projected Annual Savings:</span>
+                    <strong class="text-lg text-emerald-800 font-extrabold" id="basketAnnualSavings">₹0.00/yr</strong>
+                  </div>
+                </div>
+
+                <div class="text-xs text-slate-500 mt-4 leading-relaxed">
+                  <i class="fa-solid fa-info-circle text-emerald-600"></i>
+                  The Smart Optimizer calculates the global minimum root price for each grocery product across all available vendors, illustrating the monetary advantage over single-store shopping.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual Analytics Charts -->
+          <div class="charts-grid">
+            <div class="chart-card">
+              <div class="card-title mb-4">
+                <i class="fa-solid fa-chart-column text-emerald-600"></i>
+                <span>Store Average Grocery Price Comparison</span>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="vendorPriceChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="card-title mb-4">
+                <i class="fa-solid fa-chart-pie text-emerald-600"></i>
+                <span>Category Inventory Distribution</span>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="categoryDistributionChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             SECTION 6: ABOUT PROJECT & COMPLEXITY ANALYSIS
+             ================================================================ -->
+        <section id="section-about" class="page-section hidden-section">
+          <!-- Academic Presentation Header -->
+          <div class="about-hero-card">
+            <span class="about-header-badge">
+              <i class="fa-solid fa-graduation-cap"></i> Data Structures Project Presentation
+            </span>
+            <h1 class="about-title">
+              Enhancing Grocery Cost Savings Using a Smart Grocery Price Comparison System Compared with Traditional Manual Price Comparison
+            </h1>
+            <p class="about-lead">
+              A comprehensive study and implementation of binary Min-Heap Priority Queues to eliminate human cognitive bias, mitigate search latency, and optimize household grocery expenditure across distributed retail vendors.
+            </p>
+          </div>
+
+          <!-- Problem Statement & Objectives -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="card p-6">
+              <div class="card-title text-rose-700 mb-3">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Problem Statement</span>
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                Traditional grocery price comparison is intrinsically manual, fragmented, and inefficient. Consumers must cross-reference physical promotional flyers, navigate multiple retailer applications, or physically visit competing supermarkets.
+              </p>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                This manual methodology leads to severe cognitive overload, high latency, missed short-term flash discounts, and purchasing decisions constrained to a single supermarket—resulting in consumers overpaying by an estimated <strong>20% to 35%</strong> on identical staples.
+              </p>
+            </div>
+
+            <div class="card p-6">
+              <div class="card-title text-emerald-700 mb-3">
+                <i class="fa-solid fa-bullseye"></i>
+                <span>Project Objectives</span>
+              </div>
+              <ul class="feature-list text-sm">
+                <li><i class="fa-solid fa-check text-emerald-600"></i> <span><strong>Algorithmic Price Ingestion:</strong> Structure vendor pricing into uniform objects with names, units, categories, and stock availability.</span></li>
+                <li><i class="fa-solid fa-check text-emerald-600"></i> <span><strong>Min-Heap Priority Queue:</strong> Ensure the absolute lowest price is maintained at the root node for \(O(1)\) lookup.</span></li>
+                <li><i class="fa-solid fa-check text-emerald-600"></i> <span><strong>Ascending Ranking:</strong> Enable \(O(n \log n)\) ascending vendor sorting via successive \(O(\log n)\) extract-min operations.</span></li>
+                <li><i class="fa-solid fa-check text-emerald-600"></i> <span><strong>Savings Optimization:</strong> Quantify cost savings against worst and average vendor benchmarks with projected annual gains.</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Proposed System Architecture Flowchart -->
+          <div class="architecture-flowchart-card">
+            <div class="card-title mb-2">
+              <i class="fa-solid fa-diagram-project text-emerald-600"></i>
+              <span>Proposed System Architecture &amp; Data Flow</span>
+            </div>
+            <p class="text-sm text-slate-500">
+              End-to-end data pipeline from raw grocery input to real-time Min-Heap tree rendering and basket savings calculation.
+            </p>
+
+            <div class="flowchart-nodes-flex">
+              <div class="flow-node">
+                <div class="flow-icon"><i class="fa-solid fa-database"></i></div>
+                <div class="flow-node-title">Raw Grocery Catalog</div>
+                <div class="flow-node-desc">Multi-vendor item records with prices, units &amp; stock</div>
+              </div>
+              <div class="flow-connector"><i class="fa-solid fa-arrow-right"></i></div>
+
+              <div class="flow-node flow-node-active">
+                <div class="flow-icon"><i class="fa-solid fa-filter"></i></div>
+                <div class="flow-node-title">Module 1: Ingestion</div>
+                <div class="flow-node-desc">Search, filter &amp; validate product data in O(n)</div>
+              </div>
+              <div class="flow-connector"><i class="fa-solid fa-arrow-right"></i></div>
+
+              <div class="flow-node flow-node-active">
+                <div class="flow-icon"><i class="fa-solid fa-sitemap"></i></div>
+                <div class="flow-node-title">Module 2: Min-Heap</div>
+                <div class="flow-node-desc">Bubble-up / down heapify with root minimum in O(1)</div>
+              </div>
+              <div class="flow-connector"><i class="fa-solid fa-arrow-right"></i></div>
+
+              <div class="flow-node">
+                <div class="flow-icon"><i class="fa-solid fa-calculator"></i></div>
+                <div class="flow-node-title">Module 3: Savings Engine</div>
+                <div class="flow-node-desc">Extract-Min O(log n), multi-vendor cart savings &amp; analytics</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detailed Complexity Breakdown of All Three Modules -->
+          <div class="section-header">
+            <div class="section-header-left">
+              <h2>Module Technical Specifications &amp; Complexity Analysis</h2>
+              <p>Theoretical time and space bounds as presented in our project defense.</p>
+            </div>
+          </div>
+
+          <div class="modules-breakdown-list">
+            <!-- Module 1 Breakdown -->
+            <div class="module-deep-card">
+              <div class="module-deep-header">
+                <div class="module-deep-title">
+                  <span class="text-emerald-700 font-extrabold mr-2">Module 1:</span> Product Data Management
+                </div>
+                <div class="complexity-tag-group">
+                  <span class="complexity-chip-time"><i class="fa-solid fa-clock"></i> Time: O(n) Processing</span>
+                  <span class="complexity-chip-space"><i class="fa-solid fa-memory"></i> Space: O(n) Storage</span>
+                </div>
+              </div>
+              <p>
+                Responsible for managing the collection of multi-vendor grocery items. Linear searching and filtering through the catalog requires examining each of the \(n\) records in the worst case, yielding <strong>\(O(n)\)</strong> time complexity. Adding a record is \(O(1)\) amortized, while full deletions or updates require a single scan of the array.
+              </p>
+              <div class="math-explanation-box">
+                <strong>Space Complexity:</strong> \(O(n)\) where \(n\) is the total number of products stored in memory and persisted in HTML5 LocalStorage.
+              </div>
+            </div>
+
+            <!-- Module 2 Breakdown -->
+            <div class="module-deep-card">
+              <div class="module-deep-header">
+                <div class="module-deep-title">
+                  <span class="text-emerald-700 font-extrabold mr-2">Module 2:</span> Price Comparison &amp; Min-Heap Ranking
+                </div>
+                <div class="complexity-tag-group">
+                  <span class="complexity-chip-time"><i class="fa-solid fa-clock"></i> Time: O(log n) Per Insertion/Extraction &bull; O(n log n) Total</span>
+                  <span class="complexity-chip-space"><i class="fa-solid fa-memory"></i> Space: O(n) Heap Array</span>
+                </div>
+              </div>
+              <p>
+                The core algorithmic engine. When comparing vendors for a specific grocery item, offerings are inserted into a Complete Binary Tree structured as a <strong>Min-Heap</strong>.
+              </p>
+              <ul class="feature-list text-sm mb-3">
+                <li><span>&bull; <strong>Insertion:</strong> Placing a new vendor price at array index \(k\) and executing <code>heapifyUp()</code> traverses along the tree height \(h = \lfloor \log_2 n \rfloor\), executing at most \(\log n\) parent swaps: <strong>\(O(\log n)\)</strong>.</span></li>
+                <li><span>&bull; <strong>Peek Root:</strong> Reading index 0 yields the cheapest vendor immediately: <strong>\(O(1)\)</strong>.</span></li>
+                <li><span>&bull; <strong>Extraction (Extract-Min):</strong> Removing the root and restoring the heap property with <code>heapifyDown()</code> takes <strong>\(O(\log n)\)</strong> time.</span></li>
+                <li><span>&bull; <strong>Full Ascending Ranking:</strong> Performing \(n\) successive extractions to sort all vendors in ascending price order requires <strong>\(O(n \log n)\)</strong> time complexity (Heap Sort).</span></li>
+              </ul>
+              <div class="math-explanation-box">
+                <strong>Index Mapping:</strong> Parent: \(\lfloor(i-1)/2\rfloor\), Left Child: \(2i+1\), Right Child: \(2i+2\). Stored compactly in contiguous memory with <strong>\(O(n)\)</strong> auxiliary space.
+              </div>
+            </div>
+
+            <!-- Module 3 Breakdown -->
+            <div class="module-deep-card">
+              <div class="module-deep-header">
+                <div class="module-deep-title">
+                  <span class="text-emerald-700 font-extrabold mr-2">Module 3:</span> Recommendation &amp; Cost Savings Optimizer
+                </div>
+                <div class="complexity-tag-group">
+                  <span class="complexity-chip-time"><i class="fa-solid fa-clock"></i> Time: O(log n) Extraction</span>
+                  <span class="complexity-chip-space"><i class="fa-solid fa-memory"></i> Space: O(n)</span>
+                </div>
+              </div>
+              <p>
+                The recommendation engine inspects the root of each item's Min-Heap to determine the cheapest retailer, computes the delta against the maximum/worst vendor (\(P_{\text{worst}} - P_{\text{root}}\)), and evaluates aggregate multi-vendor cart savings.
+              </p>
+              <div class="math-explanation-box">
+                <strong>Formula:</strong> \(\text{Savings} = \sum_{k=1}^{K} \left( \max(P_{k}) - \min(P_{k}) \right)\). For \(K\) basket items, extracting the optimal prices takes \(O(K \log n)\) time. Space complexity remains \(O(n)\).
+              </div>
+            </div>
+          </div>
+
+          <!-- Academic Complexity Comparison Table -->
+          <div class="complexity-table-card">
+            <div class="card-title mb-2">
+              <i class="fa-solid fa-table-list text-emerald-600"></i>
+              <span>Comparative Algorithmic Complexity Table</span>
+            </div>
+            <p class="text-sm text-slate-500">
+              Direct comparison of traditional manual search, linear search, binary search trees, and our implemented Min-Heap Priority Queue.
+            </p>
+
+            <table class="complexity-table">
+              <thead>
+                <tr>
+                  <th>Methodology / Data Structure</th>
+                  <th>Find Minimum Price</th>
+                  <th>Insertion</th>
+                  <th>Full Price Ranking</th>
+                  <th>Space Complexity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Manual Human Search</strong></td>
+                  <td>\(O(n \times m)\) human checks</td>
+                  <td>Slow (manual re-reading)</td>
+                  <td>Subjective / Incomplete</td>
+                  <td>Physical circulars / Mental load</td>
+                </tr>
+                <tr>
+                  <td><strong>Unsorted Linear Array</strong></td>
+                  <td>\(O(n)\) linear scan</td>
+                  <td>\(O(1)\) append</td>
+                  <td>\(O(n \log n)\) using QuickSort</td>
+                  <td>\(O(n)\)</td>
+                </tr>
+                <tr>
+                  <td><strong>Binary Search Tree (BST)</strong></td>
+                  <td>\(O(\log n)\) avg, \(O(n)\) worst</td>
+                  <td>\(O(\log n)\) avg, \(O(n)\) worst</td>
+                  <td>\(O(n)\) In-order traversal</td>
+                  <td>\(O(n)\) (Pointers overhead)</td>
+                </tr>
+                <tr class="highlight-row">
+                  <td><strong>Smart Min-Heap (Our System)</strong></td>
+                  <td><strong>\(O(1)\) Instant Root Peek</strong></td>
+                  <td><strong>\(O(\log n)\)</strong></td>
+                  <td><strong>\(O(n \log n)\) Heap Sort</strong></td>
+                  <td><strong>\(O(n)\) Array (No pointers)</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Academic Disclaimer Footer -->
+          <div class="card p-6 bg-slate-50 border-slate-200">
+            <div class="flex items-start gap-4">
+              <i class="fa-solid fa-circle-exclamation text-emerald-600 text-xl mt-1"></i>
+              <div>
+                <h4 class="font-bold text-slate-900 text-sm mb-1">Academic Demonstration Notice</h4>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  This project was designed, developed, and verified strictly for college academic demonstration and data structures evaluation. All grocery vendor prices, brand names, and stock metrics are curated sample values to evaluate the algorithmic behavior of the Min-Heap priority queue under simulated market conditions. No proprietary commercial web scraping or paid APIs were used.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Application Scripts -->
+  
+  <!-- Inlined Core JavaScript Bundle -->
+  <script>
+  /* ========================================================
+     1. MIN-HEAP DATA STRUCTURE IMPLEMENTATION
+     ======================================================== */
+/**
+ * Smart Grocery Price Comparison System
+ * Core Data Structure: Min-Heap (Priority Queue) Implementation
+ * 
+ * College Data Structures Project:
+ * "Enhancing Grocery Cost Savings Using a Smart Grocery Price Comparison System 
+ *  Compared with Traditional Manual Price Comparison"
+ * 
+ * Time Complexities:
+ * - Insertion: O(log n)
+ * - Extract-Min: O(log n)
+ * - Peek (Find Min / Root): O(1)
+ * - Heapify Up / Down: O(log n)
+ * - Build Heap: O(n)
+ * - Heap Sort (Ascending Extraction): O(n log n)
+ * Space Complexity: O(n)
+ */
+
+class MinHeap {
+  /**
+   * @param {Function} comparator - Custom comparator function. Default compares by .price or direct value.
+   */
+  constructor(comparator = null) {
+    this.heap = [];
+    this.logs = [];
+    this.comparator = comparator || ((a, b) => {
+      const valA = (typeof a === 'object' && a !== null && 'price' in a) ? Number(a.price) : Number(a);
+      const valB = (typeof b === 'object' && b !== null && 'price' in b) ? Number(b.price) : Number(b);
+      return valA - valB;
+    });
+  }
+
+  // --- Helper Index Calculations ---
+  getParentIndex(i) {
+    return Math.floor((i - 1) / 2);
+  }
+
+  getLeftChildIndex(i) {
+    return 2 * i + 1;
+  }
+
+  getRightChildIndex(i) {
+    return 2 * i + 2;
+  }
+
+  hasParent(i) {
+    return this.getParentIndex(i) >= 0;
+  }
+
+  hasLeftChild(i) {
+    return this.getLeftChildIndex(i) < this.heap.length;
+  }
+
+  hasRightChild(i) {
+    return this.getRightChildIndex(i) < this.heap.length;
+  }
+
+  parent(i) {
+    return this.heap[this.getParentIndex(i)];
+  }
+
+  leftChild(i) {
+    return this.heap[this.getLeftChildIndex(i)];
+  }
+
+  rightChild(i) {
+    return this.heap[this.getRightChildIndex(i)];
+  }
+
+  /**
+   * Swap two elements in the heap array
+   */
+  swap(i, j) {
+    const temp = this.heap[i];
+    this.heap[i] = this.heap[j];
+    this.heap[j] = temp;
+  }
+
+  /**
+   * Peek at the minimum element (Root) without removing it.
+   * Time Complexity: O(1)
+   */
+  peek() {
+    if (this.heap.length === 0) return null;
+    return this.heap[0];
+  }
+
+  /**
+   * Return size of heap
+   */
+  size() {
+    return this.heap.length;
+  }
+
+  /**
+   * Check if heap is empty
+   */
+  isEmpty() {
+    return this.heap.length === 0;
+  }
+
+  /**
+   * Clear all items
+   */
+  clear() {
+    this.heap = [];
+    this.logs = [];
+  }
+
+  /**
+   * Get formatted label for logging/visualization
+   */
+  formatItem(item) {
+    if (typeof item === 'object' && item !== null) {
+      const vendor = item.vendor ? ` [${item.vendor}]` : '';
+      const name = item.name ? `${item.name}` : '';
+      const price = item.price !== undefined ? `₹${Number(item.price).toFixed(2)}` : '';
+      return `${vendor || name} ${price}`.trim();
+    }
+    return `₹${Number(item).toFixed(2)}`;
+  }
+
+  /**
+   * Insert a new element into the Min-Heap.
+   * Places element at end and bubbles it up (Heapify Up).
+   * Time Complexity: O(log n)
+   */
+  insert(item) {
+    this.heap.push(item);
+    const newIdx = this.heap.length - 1;
+    this.logs.push(`Inserted ${this.formatItem(item)} at array index ${newIdx}.`);
+    this.heapifyUp(newIdx);
+    return this.heap;
+  }
+
+  /**
+   * Heapify Up: Restores Min-Heap property upwards from child to parent.
+   * In a Min-Heap, every parent node must be <= its children.
+   * Time Complexity: O(log n)
+   */
+  heapifyUp(startIndex = null) {
+    let index = startIndex !== null ? startIndex : this.heap.length - 1;
+
+    while (this.hasParent(index)) {
+      const parentIdx = this.getParentIndex(index);
+      const currentItem = this.heap[index];
+      const parentItem = this.heap[parentIdx];
+
+      // If current child is strictly smaller than its parent, swap!
+      if (this.comparator(currentItem, parentItem) < 0) {
+        this.logs.push(
+          `Heapify Up Swap: Child index ${index} (${this.formatItem(currentItem)}) is cheaper than Parent index ${parentIdx} (${this.formatItem(parentItem)}). Swapping.`
+        );
+        this.swap(index, parentIdx);
+        index = parentIdx;
+      } else {
+        // Min-Heap property satisfied
+        this.logs.push(
+          `Heapify Up Complete: Node (${this.formatItem(currentItem)}) is >= Parent (${this.formatItem(parentItem)}). Heap property verified.`
+        );
+        break;
+      }
+    }
+  }
+
+  /**
+   * Extract the minimum element (Root) from the Min-Heap.
+   * Removes root, moves the last element to the root, and bubbles down (Heapify Down).
+   * Time Complexity: O(log n)
+   */
+  extractMin() {
+    if (this.heap.length === 0) {
+      this.logs.push("Extract-Min failed: Heap is empty.");
+      return null;
+    }
+
+    if (this.heap.length === 1) {
+      const min = this.heap.pop();
+      this.logs.push(`Extract-Min: Removed solitary root element ${this.formatItem(min)}.`);
+      return min;
+    }
+
+    const min = this.heap[0];
+    const lastElement = this.heap.pop();
+    this.heap[0] = lastElement;
+    this.logs.push(
+      `Extract-Min: Removed root ${this.formatItem(min)}. Moved last leaf element ${this.formatItem(lastElement)} to root (index 0).`
+    );
+
+    this.heapifyDown(0);
+    return min;
+  }
+
+  /**
+   * Heapify Down: Restores Min-Heap property downwards from parent to children.
+   * Replaces parent with the smaller of its two children if parent > child.
+   * Time Complexity: O(log n)
+   */
+  heapifyDown(startIndex = 0) {
+    let index = startIndex;
+
+    while (this.hasLeftChild(index)) {
+      let smallestChildIndex = this.getLeftChildIndex(index);
+      const rightChildIdx = this.getRightChildIndex(index);
+
+      // If right child exists and is smaller than left child, select right child
+      if (
+        this.hasRightChild(index) &&
+        this.comparator(this.heap[rightChildIdx], this.heap[smallestChildIndex]) < 0
+      ) {
+        smallestChildIndex = rightChildIdx;
+      }
+
+      // If current element is larger than the smallest child, swap!
+      if (this.comparator(this.heap[index], this.heap[smallestChildIndex]) > 0) {
+        this.logs.push(
+          `Heapify Down Swap: Parent index ${index} (${this.formatItem(this.heap[index])}) is more expensive than Child index ${smallestChildIndex} (${this.formatItem(this.heap[smallestChildIndex])}). Swapping.`
+        );
+        this.swap(index, smallestChildIndex);
+        index = smallestChildIndex;
+      } else {
+        this.logs.push(
+          `Heapify Down Complete: Parent (${this.formatItem(this.heap[index])}) is <= smallest child (${this.formatItem(this.heap[smallestChildIndex])}). Min-heap property satisfied.`
+        );
+        break;
+      }
+    }
+  }
+
+  /**
+   * Build heap from an unsorted array of items.
+   * Bottom-up approach: O(n) time complexity.
+   */
+  buildHeap(items) {
+    this.heap = [...items];
+    this.logs.push(`Building Min-Heap from ${items.length} items using O(n) bottom-up heap construction.`);
+    const firstNonLeafIndex = Math.floor(this.heap.length / 2) - 1;
+    for (let i = firstNonLeafIndex; i >= 0; i--) {
+      this.heapifyDown(i);
+    }
+  }
+
+  /**
+   * Delete an item by custom predicate or index
+   */
+  removeByIndex(index) {
+    if (index < 0 || index >= this.heap.length) return null;
+    const removed = this.heap[index];
+    const last = this.heap.pop();
+
+    if (index < this.heap.length) {
+      this.heap[index] = last;
+      this.heapifyDown(index);
+      this.heapifyUp(index);
+    }
+    this.logs.push(`Removed item ${this.formatItem(removed)} from index ${index}.`);
+    return removed;
+  }
+
+  /**
+   * Ascending Price Ranking (Heap Sort extraction)
+   * Continually extracts minimum element to produce a strictly ascending ordered list.
+   * Time Complexity: O(n log n)
+   */
+  getAscendingRankedList() {
+    // Clone heap array and comparator so original heap is untouched
+    const clone = new MinHeap(this.comparator);
+    clone.heap = [...this.heap];
+
+    const ranked = [];
+    while (!clone.isEmpty()) {
+      ranked.push(clone.extractMin());
+    }
+    return ranked;
+  }
+
+  /**
+   * Returns current raw array representation
+   */
+  getArray() {
+    return [...this.heap];
+  }
+
+  /**
+   * Returns detailed tree node metadata for visualization
+   * Node positions (x, y), levels, children links.
+   */
+  getTreeStructure(svgWidth = 700, svgHeight = 360) {
+    if (this.heap.length === 0) return { nodes: [], edges: [] };
+
+    const nodes = [];
+    const edges = [];
+    const totalLevels = Math.floor(Math.log2(this.heap.length)) + 1;
+    const levelHeight = svgHeight / (totalLevels + 1);
+
+    for (let i = 0; i < this.heap.length; i++) {
+      const level = Math.floor(Math.log2(i + 1));
+      const levelStartIndex = Math.pow(2, level) - 1;
+      const indexInLevel = i - levelStartIndex;
+      const maxNodesInLevel = Math.pow(2, level);
+
+      // Horizontal spacing
+      const segmentWidth = svgWidth / (maxNodesInLevel + 1);
+      const x = (indexInLevel + 1) * segmentWidth;
+      const y = (level + 1) * levelHeight;
+
+      const item = this.heap[i];
+      const isRoot = i === 0;
+
+      nodes.push({
+        index: i,
+        x,
+        y,
+        level,
+        item,
+        isRoot,
+        label: this.formatItem(item),
+        price: (typeof item === 'object' && item !== null && 'price' in item) ? Number(item.price) : Number(item),
+        vendor: item.vendor || '',
+        name: item.name || ''
+      });
+
+      // Add edge to parent
+      if (i > 0) {
+        const parentIdx = this.getParentIndex(i);
+        edges.push({
+          fromIndex: parentIdx,
+          toIndex: i
+        });
+      }
+    }
+
+    return { nodes, edges, totalLevels };
+  }
+}
+
+// Export for browser global window
+if (typeof window !== 'undefined') {
+  window.MinHeap = MinHeap;
+}
+
+
+  /* ========================================================
+     2. DEMONSTRATION DATA & LOCALSTORAGE SERVICE
+     ======================================================== */
+/**
+ * Smart Grocery Price Comparison System
+ * Indian Retail Stores Demonstration Dataset and LocalStorage Manager
+ * 
+ * DISCLAIMER: All prices and product data are demonstration/sample data 
+ * intended for academic evaluation of Data Structures (Min-Heap) algorithms.
+ * Currency: Indian Rupees (₹ - INR)
+ * Retail Vendors: D-Mart, Saravana Stores, Reliance Mart, More Supermarket, Spencer's, BigBasket
+ */
+
+const DEMO_NOTICE = "Academic Demonstration Data: Indian retail grocery prices are simulated across D-Mart, Saravana Stores, Reliance Mart, More, Spencer's, and BigBasket to evaluate Min-Heap algorithmic ranking.";
+
+const INITIAL_GROCERY_DATA = [
+  // --- Aashirvaad Shudh Chakki Atta (5 kg) ---
+  {
+    id: "groc-in-001",
+    name: "Aashirvaad Shudh Chakki Atta (5 kg)",
+    category: "Staples & Grains",
+    vendor: "D-Mart",
+    price: 239.00,
+    unit: "5 kg bag",
+    availability: "In Stock",
+    discount: "D-Mart Mega Saver",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-002",
+    name: "Aashirvaad Shudh Chakki Atta (5 kg)",
+    category: "Staples & Grains",
+    vendor: "Saravana Stores",
+    price: 245.00,
+    unit: "5 kg bag",
+    availability: "In Stock",
+    discount: "Super Price",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-003",
+    name: "Aashirvaad Shudh Chakki Atta (5 kg)",
+    category: "Staples & Grains",
+    vendor: "Reliance Mart",
+    price: 255.00,
+    unit: "5 kg bag",
+    availability: "In Stock",
+    discount: "Smart Bazaar Deal",
+    rating: 4.6,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-004",
+    name: "Aashirvaad Shudh Chakki Atta (5 kg)",
+    category: "Staples & Grains",
+    vendor: "More Supermarket",
+    price: 265.00,
+    unit: "5 kg bag",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.5,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-005",
+    name: "Aashirvaad Shudh Chakki Atta (5 kg)",
+    category: "Staples & Grains",
+    vendor: "Spencer's",
+    price: 279.00,
+    unit: "5 kg bag",
+    availability: "In Stock",
+    discount: "Club Spencer's",
+    rating: 4.6,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-006",
+    name: "Aashirvaad Shudh Chakki Atta (5 kg)",
+    category: "Staples & Grains",
+    vendor: "BigBasket",
+    price: 285.00,
+    unit: "5 kg bag",
+    availability: "In Stock",
+    discount: "BB Star 5% Off",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+
+  // --- Tata Salt Vacuum Evaporated Iodized (1 kg) ---
+  {
+    id: "groc-in-007",
+    name: "Tata Salt Iodized (1 kg)",
+    category: "Staples & Grains",
+    vendor: "D-Mart",
+    price: 24.00,
+    unit: "1 kg pouch",
+    availability: "In Stock",
+    discount: "D-Mart Best Value",
+    rating: 4.9,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-008",
+    name: "Tata Salt Iodized (1 kg)",
+    category: "Staples & Grains",
+    vendor: "Saravana Stores",
+    price: 25.00,
+    unit: "1 kg pouch",
+    availability: "In Stock",
+    discount: "Special Rate",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-009",
+    name: "Tata Salt Iodized (1 kg)",
+    category: "Staples & Grains",
+    vendor: "Reliance Mart",
+    price: 26.00,
+    unit: "1 kg pouch",
+    availability: "In Stock",
+    discount: "Everyday Low Price",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-010",
+    name: "Tata Salt Iodized (1 kg)",
+    category: "Staples & Grains",
+    vendor: "More Supermarket",
+    price: 27.00,
+    unit: "1 kg pouch",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.6,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-011",
+    name: "Tata Salt Iodized (1 kg)",
+    category: "Staples & Grains",
+    vendor: "Spencer's",
+    price: 28.00,
+    unit: "1 kg pouch",
+    availability: "In Stock",
+    discount: "MRP Sale",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-012",
+    name: "Tata Salt Iodized (1 kg)",
+    category: "Staples & Grains",
+    vendor: "BigBasket",
+    price: 28.00,
+    unit: "1 kg pouch",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+
+  // --- Fortune Sunlite Refined Sunflower Oil (1 Litre Pouch) ---
+  {
+    id: "groc-in-013",
+    name: "Fortune Refined Sunflower Oil (1 L)",
+    category: "Oils & Ghee",
+    vendor: "D-Mart",
+    price: 128.00,
+    unit: "1 Litre Pouch",
+    availability: "In Stock",
+    discount: "Save ₹32",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-014",
+    name: "Fortune Refined Sunflower Oil (1 L)",
+    category: "Oils & Ghee",
+    vendor: "Saravana Stores",
+    price: 132.00,
+    unit: "1 Litre Pouch",
+    availability: "In Stock",
+    discount: "Wholesale Rate",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-015",
+    name: "Fortune Refined Sunflower Oil (1 L)",
+    category: "Oils & Ghee",
+    vendor: "Reliance Mart",
+    price: 138.00,
+    unit: "1 Litre Pouch",
+    availability: "In Stock",
+    discount: "Smart Cashback",
+    rating: 4.6,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-016",
+    name: "Fortune Refined Sunflower Oil (1 L)",
+    category: "Oils & Ghee",
+    vendor: "More Supermarket",
+    price: 145.00,
+    unit: "1 Litre Pouch",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.5,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-017",
+    name: "Fortune Refined Sunflower Oil (1 L)",
+    category: "Oils & Ghee",
+    vendor: "BigBasket",
+    price: 149.00,
+    unit: "1 Litre Pouch",
+    availability: "In Stock",
+    discount: "Express Delivery",
+    rating: 4.6,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-018",
+    name: "Fortune Refined Sunflower Oil (1 L)",
+    category: "Oils & Ghee",
+    vendor: "Spencer's",
+    price: 155.00,
+    unit: "1 Litre Pouch",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+
+  // --- India Gate Basmati Rice Feast Rozzana (5 kg) ---
+  {
+    id: "groc-in-019",
+    name: "India Gate Basmati Rice Rozzana (5 kg)",
+    category: "Staples & Grains",
+    vendor: "D-Mart",
+    price: 389.00,
+    unit: "5 kg bag",
+    availability: "In Stock",
+    discount: "Mega Fest Deal",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-020",
+    name: "India Gate Basmati Rice Rozzana (5 kg)",
+    category: "Staples & Grains",
+    vendor: "Saravana Stores",
+    price: 399.00,
+    unit: "5 kg bag",
+    availability: "In Stock",
+    discount: "Saravana Special",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-021",
+    name: "India Gate Basmati Rice Rozzana (5 kg)",
+    category: "Staples & Grains",
+    vendor: "Reliance Mart",
+    price: 425.00,
+    unit: "5 kg bag",
+    availability: "In Stock",
+    discount: "Smart Saver",
+    rating: 4.5,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-022",
+    name: "India Gate Basmati Rice Rozzana (5 kg)",
+    category: "Staples & Grains",
+    vendor: "More Supermarket",
+    price: 449.00,
+    unit: "5 kg bag",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.6,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-023",
+    name: "India Gate Basmati Rice Rozzana (5 kg)",
+    category: "Staples & Grains",
+    vendor: "Spencer's",
+    price: 475.00,
+    unit: "5 kg bag",
+    availability: "Limited Stock",
+    discount: "Standard",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-024",
+    name: "India Gate Basmati Rice Rozzana (5 kg)",
+    category: "Staples & Grains",
+    vendor: "BigBasket",
+    price: 499.00,
+    unit: "5 kg bag",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+
+  // --- Amul Taaza Homogenised Toned Milk (1 Litre Tetra) ---
+  {
+    id: "groc-in-025",
+    name: "Amul Taaza Toned Milk (1 Litre)",
+    category: "Dairy",
+    vendor: "D-Mart",
+    price: 70.00,
+    unit: "1 Litre Tetra Pack",
+    availability: "In Stock",
+    discount: "D-Mart Price",
+    rating: 4.9,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-026",
+    name: "Amul Taaza Toned Milk (1 Litre)",
+    category: "Dairy",
+    vendor: "Saravana Stores",
+    price: 71.00,
+    unit: "1 Litre Tetra Pack",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-027",
+    name: "Amul Taaza Toned Milk (1 Litre)",
+    category: "Dairy",
+    vendor: "Reliance Mart",
+    price: 72.00,
+    unit: "1 Litre Tetra Pack",
+    availability: "In Stock",
+    discount: "Fresh Pack",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-028",
+    name: "Amul Taaza Toned Milk (1 Litre)",
+    category: "Dairy",
+    vendor: "More Supermarket",
+    price: 73.00,
+    unit: "1 Litre Tetra Pack",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.6,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-029",
+    name: "Amul Taaza Toned Milk (1 Litre)",
+    category: "Dairy",
+    vendor: "BigBasket",
+    price: 74.00,
+    unit: "1 Litre Tetra Pack",
+    availability: "In Stock",
+    discount: "Daily Morning",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-030",
+    name: "Amul Taaza Toned Milk (1 Litre)",
+    category: "Dairy",
+    vendor: "Spencer's",
+    price: 75.00,
+    unit: "1 Litre Tetra Pack",
+    availability: "In Stock",
+    discount: "MRP",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+
+  // --- Tata Sampann Unpolished Toor Dal (1 kg) ---
+  {
+    id: "groc-in-031",
+    name: "Tata Sampann Toor Dal (1 kg)",
+    category: "Dals & Pulses",
+    vendor: "D-Mart",
+    price: 162.00,
+    unit: "1 kg pack",
+    availability: "In Stock",
+    discount: "Save ₹36",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-032",
+    name: "Tata Sampann Toor Dal (1 kg)",
+    category: "Dals & Pulses",
+    vendor: "Saravana Stores",
+    price: 168.00,
+    unit: "1 kg pack",
+    availability: "In Stock",
+    discount: "Wholesale Price",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-033",
+    name: "Tata Sampann Toor Dal (1 kg)",
+    category: "Dals & Pulses",
+    vendor: "Reliance Mart",
+    price: 175.00,
+    unit: "1 kg pack",
+    availability: "In Stock",
+    discount: "Smart Dal Saver",
+    rating: 4.6,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-034",
+    name: "Tata Sampann Toor Dal (1 kg)",
+    category: "Dals & Pulses",
+    vendor: "More Supermarket",
+    price: 182.00,
+    unit: "1 kg pack",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.5,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-035",
+    name: "Tata Sampann Toor Dal (1 kg)",
+    category: "Dals & Pulses",
+    vendor: "BigBasket",
+    price: 189.00,
+    unit: "1 kg pack",
+    availability: "In Stock",
+    discount: "BB Royal",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-036",
+    name: "Tata Sampann Toor Dal (1 kg)",
+    category: "Dals & Pulses",
+    vendor: "Spencer's",
+    price: 198.00,
+    unit: "1 kg pack",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+
+  // --- Maggi 2-Minute Masala Instant Noodles (Pack of 12 / 840g) ---
+  {
+    id: "groc-in-037",
+    name: "Maggi 2-Minute Masala Noodles (Pack of 12)",
+    category: "Snacks & Instant",
+    vendor: "D-Mart",
+    price: 138.00,
+    unit: "840g Family Pack",
+    availability: "In Stock",
+    discount: "Family Saver Pack",
+    rating: 4.9,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-038",
+    name: "Maggi 2-Minute Masala Noodles (Pack of 12)",
+    category: "Snacks & Instant",
+    vendor: "Saravana Stores",
+    price: 142.00,
+    unit: "840g Family Pack",
+    availability: "In Stock",
+    discount: "Saravana Super Value",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-039",
+    name: "Maggi 2-Minute Masala Noodles (Pack of 12)",
+    category: "Snacks & Instant",
+    vendor: "Reliance Mart",
+    price: 148.00,
+    unit: "840g Family Pack",
+    availability: "In Stock",
+    discount: "Smart Deal",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-040",
+    name: "Maggi 2-Minute Masala Noodles (Pack of 12)",
+    category: "Snacks & Instant",
+    vendor: "More Supermarket",
+    price: 156.00,
+    unit: "840g Family Pack",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.6,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-041",
+    name: "Maggi 2-Minute Masala Noodles (Pack of 12)",
+    category: "Snacks & Instant",
+    vendor: "BigBasket",
+    price: 160.00,
+    unit: "840g Family Pack",
+    availability: "In Stock",
+    discount: "Instant 10 Min",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-042",
+    name: "Maggi 2-Minute Masala Noodles (Pack of 12)",
+    category: "Snacks & Instant",
+    vendor: "Spencer's",
+    price: 168.00,
+    unit: "840g Family Pack",
+    availability: "In Stock",
+    discount: "MRP Rate",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+
+  // --- Surf Excel Easy Wash Detergent Powder (1 kg) ---
+  {
+    id: "groc-in-043",
+    name: "Surf Excel Easy Wash Powder (1 kg)",
+    category: "Household & Cleaning",
+    vendor: "D-Mart",
+    price: 132.00,
+    unit: "1 kg bag",
+    availability: "In Stock",
+    discount: "D-Mart Dhamaaka",
+    rating: 4.9,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-044",
+    name: "Surf Excel Easy Wash Powder (1 kg)",
+    category: "Household & Cleaning",
+    vendor: "Saravana Stores",
+    price: 136.00,
+    unit: "1 kg bag",
+    availability: "In Stock",
+    discount: "Aadi Mega Discount",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-045",
+    name: "Surf Excel Easy Wash Powder (1 kg)",
+    category: "Household & Cleaning",
+    vendor: "Reliance Mart",
+    price: 142.00,
+    unit: "1 kg bag",
+    availability: "In Stock",
+    discount: "Clean Saver",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-046",
+    name: "Surf Excel Easy Wash Powder (1 kg)",
+    category: "Household & Cleaning",
+    vendor: "More Supermarket",
+    price: 148.00,
+    unit: "1 kg bag",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.6,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-047",
+    name: "Surf Excel Easy Wash Powder (1 kg)",
+    category: "Household & Cleaning",
+    vendor: "BigBasket",
+    price: 152.00,
+    unit: "1 kg bag",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-048",
+    name: "Surf Excel Easy Wash Powder (1 kg)",
+    category: "Household & Cleaning",
+    vendor: "Spencer's",
+    price: 158.00,
+    unit: "1 kg bag",
+    availability: "Limited Stock",
+    discount: "Standard",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+
+  // --- Britannia Good Day Cashew Cookies (600g Value Pack) ---
+  {
+    id: "groc-in-049",
+    name: "Britannia Good Day Cashew (600g)",
+    category: "Snacks & Instant",
+    vendor: "D-Mart",
+    price: 105.00,
+    unit: "600g Value Pack",
+    availability: "In Stock",
+    discount: "Buy 1 Save ₹35",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-050",
+    name: "Britannia Good Day Cashew (600g)",
+    category: "Snacks & Instant",
+    vendor: "Saravana Stores",
+    price: 110.00,
+    unit: "600g Value Pack",
+    availability: "In Stock",
+    discount: "Snack Saver",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-051",
+    name: "Britannia Good Day Cashew (600g)",
+    category: "Snacks & Instant",
+    vendor: "Reliance Mart",
+    price: 115.00,
+    unit: "600g Value Pack",
+    availability: "In Stock",
+    discount: "Combo Deal",
+    rating: 4.6,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-052",
+    name: "Britannia Good Day Cashew (600g)",
+    category: "Snacks & Instant",
+    vendor: "More Supermarket",
+    price: 125.00,
+    unit: "600g Value Pack",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.5,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-053",
+    name: "Britannia Good Day Cashew (600g)",
+    category: "Snacks & Instant",
+    vendor: "Spencer's",
+    price: 132.00,
+    unit: "600g Value Pack",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.6,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-054",
+    name: "Britannia Good Day Cashew (600g)",
+    category: "Snacks & Instant",
+    vendor: "BigBasket",
+    price: 135.00,
+    unit: "600g Value Pack",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+
+  // --- Amul Pure Cow Ghee Tin (1 Litre) ---
+  {
+    id: "groc-in-055",
+    name: "Amul Pure Cow Ghee Tin (1 Litre)",
+    category: "Oils & Ghee",
+    vendor: "D-Mart",
+    price: 615.00,
+    unit: "1 Litre Tin",
+    availability: "In Stock",
+    discount: "Save ₹65",
+    rating: 4.9,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-056",
+    name: "Amul Pure Cow Ghee Tin (1 Litre)",
+    category: "Oils & Ghee",
+    vendor: "Saravana Stores",
+    price: 625.00,
+    unit: "1 Litre Tin",
+    availability: "In Stock",
+    discount: "Traditional Rate",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-057",
+    name: "Amul Pure Cow Ghee Tin (1 Litre)",
+    category: "Oils & Ghee",
+    vendor: "Reliance Mart",
+    price: 639.00,
+    unit: "1 Litre Tin",
+    availability: "In Stock",
+    discount: "Festive Smart Offer",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-058",
+    name: "Amul Pure Cow Ghee Tin (1 Litre)",
+    category: "Oils & Ghee",
+    vendor: "More Supermarket",
+    price: 655.00,
+    unit: "1 Litre Tin",
+    availability: "In Stock",
+    discount: "Standard",
+    rating: 4.6,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-059",
+    name: "Amul Pure Cow Ghee Tin (1 Litre)",
+    category: "Oils & Ghee",
+    vendor: "BigBasket",
+    price: 665.00,
+    unit: "1 Litre Tin",
+    availability: "In Stock",
+    discount: "Genuine Amul",
+    rating: 4.8,
+    lastUpdated: "2026-11-20"
+  },
+  {
+    id: "groc-in-060",
+    name: "Amul Pure Cow Ghee Tin (1 Litre)",
+    category: "Oils & Ghee",
+    vendor: "Spencer's",
+    price: 675.00,
+    unit: "1 Litre Tin",
+    availability: "In Stock",
+    discount: "MRP Rate",
+    rating: 4.7,
+    lastUpdated: "2026-11-20"
+  }
+];
+
+const STORAGE_KEYS = {
+  PRODUCTS: "smart_grocery_indian_products_v2",
+  BASKET: "smart_grocery_indian_basket_v2",
+  SETTINGS: "smart_grocery_settings_v2"
+};
+
+/**
+ * Data Storage Management Service
+ */
+const DataService = {
+  /**
+   * Load products from localStorage or initialize with INITIAL_GROCERY_DATA
+   */
+  getProducts() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.warn("Error reading localStorage, reverting to defaults:", e);
+    }
+    // Initialize default if not present
+    this.saveProducts(INITIAL_GROCERY_DATA);
+    return [...INITIAL_GROCERY_DATA];
+  },
+
+  /**
+   * Persist products array to localStorage
+   */
+  saveProducts(products) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(products));
+      return true;
+    } catch (e) {
+      console.error("Error saving products to localStorage:", e);
+      return false;
+    }
+  },
+
+  /**
+   * Reset products back to initial Indian demo data
+   */
+  resetToDefaults() {
+    this.saveProducts(INITIAL_GROCERY_DATA);
+    return [...INITIAL_GROCERY_DATA];
+  },
+
+  /**
+   * Add a new product
+   */
+  addProduct(productData) {
+    const products = this.getProducts();
+    const newProduct = {
+      id: "groc-in-" + Date.now().toString(36) + Math.random().toString(36).substr(2, 4),
+      name: productData.name.trim(),
+      category: productData.category || "General",
+      vendor: productData.vendor.trim(),
+      price: parseFloat(productData.price) || 0.00,
+      unit: productData.unit ? productData.unit.trim() : "1 unit",
+      availability: productData.availability || "In Stock",
+      discount: productData.discount ? productData.discount.trim() : "Standard",
+      rating: parseFloat(productData.rating) || 4.7,
+      lastUpdated: new Date().toISOString().split("T")[0]
+    };
+    products.unshift(newProduct);
+    this.saveProducts(products);
+    return newProduct;
+  },
+
+  /**
+   * Update an existing product
+   */
+  updateProduct(id, updatedFields) {
+    const products = this.getProducts();
+    const index = products.findIndex(p => p.id === id);
+    if (index === -1) return null;
+
+    products[index] = {
+      ...products[index],
+      ...updatedFields,
+      price: parseFloat(updatedFields.price !== undefined ? updatedFields.price : products[index].price),
+      lastUpdated: new Date().toISOString().split("T")[0]
+    };
+    this.saveProducts(products);
+    return products[index];
+  },
+
+  /**
+   * Delete a product by ID
+   */
+  deleteProduct(id) {
+    let products = this.getProducts();
+    const initialLen = products.length;
+    products = products.filter(p => p.id !== id);
+    if (products.length !== initialLen) {
+      this.saveProducts(products);
+      return true;
+    }
+    return false;
+  },
+
+  /**
+   * Get unique list of product names (for multi-vendor grouping & comparison)
+   */
+  getUniqueProductNames() {
+    const products = this.getProducts();
+    const set = new Set();
+    products.forEach(p => set.add(p.name));
+    return Array.from(set).sort();
+  },
+
+  /**
+   * Get all vendor offerings for a specific product name
+   */
+  getVendorsForProduct(productName) {
+    const products = this.getProducts();
+    return products.filter(p => p.name.toLowerCase() === productName.toLowerCase());
+  },
+
+  /**
+   * Get all categories
+   */
+  getCategories() {
+    const products = this.getProducts();
+    const set = new Set();
+    products.forEach(p => {
+      if (p.category) set.add(p.category);
+    });
+    return Array.from(set).sort();
+  },
+
+  /**
+   * Get all vendors
+   */
+  getVendors() {
+    const products = this.getProducts();
+    const set = new Set();
+    products.forEach(p => {
+      if (p.vendor) set.add(p.vendor);
+    });
+    return Array.from(set).sort();
+  },
+
+  /**
+   * Basket operations
+   */
+  getBasket() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.BASKET);
+      return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+      return [];
+    }
+  },
+
+  saveBasket(basket) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.BASKET, JSON.stringify(basket));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  },
+
+  addToBasket(productName, quantity = 1) {
+    const basket = this.getBasket();
+    const existing = basket.find(item => item.productName === productName);
+    if (existing) {
+      existing.quantity += quantity;
+    } else {
+      basket.push({ productName, quantity });
+    }
+    this.saveBasket(basket);
+    return basket;
+  },
+
+  removeFromBasket(productName) {
+    let basket = this.getBasket();
+    basket = basket.filter(item => item.productName !== productName);
+    this.saveBasket(basket);
+    return basket;
+  },
+
+  clearBasket() {
+    this.saveBasket([]);
+    return [];
+  }
+};
+
+// Expose globally
+if (typeof window !== 'undefined') {
+  window.DEMO_NOTICE = DEMO_NOTICE;
+  window.INITIAL_GROCERY_DATA = INITIAL_GROCERY_DATA;
+  window.DataService = DataService;
+}
+
+
+  /* ========================================================
+     3. MIN-HEAP TREE & ARRAY SVG VISUALIZER
+     ======================================================== */
+/**
+ * Smart Grocery Price Comparison System
+ * Min-Heap Tree and Array Visualizer
+ * 
+ * College Data Structures Demonstration:
+ * Visualizes the Min-Heap binary tree dynamically with SVG,
+ * displays index relationships (i, 2i+1, 2i+2, floor((i-1)/2)),
+ * and provides step-by-step execution traces for insertions and extract-min.
+ */
+
+class HeapVisualizer {
+  constructor(containerId, options = {}) {
+    this.container = document.getElementById(containerId);
+    this.options = Object.assign({
+      svgWidth: 800,
+      svgHeight: 380,
+      nodeRadius: 28,
+      onNodeClick: null
+    }, options);
+    this.heapInstance = null;
+    this.activeHighlightIndex = null;
+  }
+
+  /**
+   * Bind a MinHeap instance to this visualizer and render
+   */
+  bindHeap(minHeap) {
+    this.heapInstance = minHeap;
+    this.render();
+  }
+
+  /**
+   * Main render method: draws tree, array, and stats
+   */
+  render() {
+    if (!this.container) return;
+    this.container.innerHTML = "";
+
+    if (!this.heapInstance || this.heapInstance.size() === 0) {
+      this.container.innerHTML = `
+        <div class="empty-visualizer">
+          <div class="empty-icon"><i class="fa-solid fa-network-wired"></i></div>
+          <p class="empty-title">Heap is currently empty</p>
+          <p class="empty-desc">Select a grocery item in "Price Comparison" or insert values below to view the live Min-Heap binary tree.</p>
+        </div>
+      `;
+      return;
+    }
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "visualizer-content-wrapper";
+
+    // 1. Heap Tree SVG Section
+    const treeCard = document.createElement("div");
+    treeCard.className = "heap-tree-card";
+    treeCard.innerHTML = `
+      <div class="tree-card-header">
+        <div class="tree-title">
+          <i class="fa-solid fa-sitemap text-emerald"></i>
+          <span>Min-Heap Complete Binary Tree Representation</span>
+        </div>
+        <div class="tree-legend">
+          <span class="legend-badge root-badge"><span class="legend-dot root-dot"></span> Root / Min Price</span>
+          <span class="legend-badge child-badge"><span class="legend-dot child-dot"></span> Internal / Leaf Node</span>
+          <span class="legend-badge heap-size-badge">Nodes: <strong>${this.heapInstance.size()}</strong></span>
+        </div>
+      </div>
+      <div class="svg-tree-container" id="svgTreeScroll">
+        ${this.generateTreeSvg()}
+      </div>
+    `;
+    wrapper.appendChild(treeCard);
+
+    // 2. Linear Array & Index Mapping Representation Section
+    const arrayCard = document.createElement("div");
+    arrayCard.className = "heap-array-card";
+    arrayCard.innerHTML = `
+      <div class="array-card-header">
+        <div class="tree-title">
+          <i class="fa-solid fa-list-ol text-emerald"></i>
+          <span>Array Representation & Index Mathematics</span>
+        </div>
+        <div class="formula-chips">
+          <span class="formula-chip">Parent: <code>⌊(i-1)/2⌋</code></span>
+          <span class="formula-chip">Left Child: <code>2i + 1</code></span>
+          <span class="formula-chip">Right Child: <code>2i + 2</code></span>
+        </div>
+      </div>
+      <div class="array-grid-container">
+        ${this.generateArrayHtml()}
+      </div>
+    `;
+    wrapper.appendChild(arrayCard);
+
+    this.container.appendChild(wrapper);
+    this.attachSvgEvents();
+  }
+
+  /**
+   * Generates dynamic SVG for the binary tree
+   */
+  generateTreeSvg() {
+    const heap = this.heapInstance.getArray();
+    const count = heap.length;
+    if (count === 0) return "";
+
+    const depth = Math.floor(Math.log2(count)) + 1;
+    // Dynamic width based on tree depth
+    const computedWidth = Math.max(760, Math.pow(2, depth) * 55);
+    const computedHeight = Math.max(340, (depth + 1) * 95);
+    const levelHeight = computedHeight / (depth + 1);
+
+    // Calculate node coordinates
+    const nodes = [];
+    const edges = [];
+
+    for (let i = 0; i < count; i++) {
+      const level = Math.floor(Math.log2(i + 1));
+      const levelStartIndex = Math.pow(2, level) - 1;
+      const indexInLevel = i - levelStartIndex;
+      const maxNodesInLevel = Math.pow(2, level);
+
+      const segmentWidth = computedWidth / (maxNodesInLevel + 1);
+      const x = (indexInLevel + 1) * segmentWidth;
+      const y = (level + 1) * levelHeight - 15;
+
+      const item = heap[i];
+      const price = typeof item === 'object' && item !== null && 'price' in item 
+        ? Number(item.price) 
+        : Number(item);
+      const vendor = typeof item === 'object' && item !== null && item.vendor 
+        ? item.vendor 
+        : '';
+      const name = typeof item === 'object' && item !== null && item.name 
+        ? item.name 
+        : '';
+
+      nodes.push({ index: i, x, y, level, item, price, vendor, name, isRoot: i === 0 });
+
+      if (i > 0) {
+        const parentIdx = Math.floor((i - 1) / 2);
+        edges.push({
+          parentIndex: parentIdx,
+          childIndex: i
+        });
+      }
+    }
+
+    // Build SVG string
+    let svgContent = `<svg viewBox="0 0 ${computedWidth} ${computedHeight}" class="heap-svg" xmlns="http://www.w3.org/2000/svg">`;
+
+    // Defs for gradients & shadow filters
+    svgContent += `
+      <defs>
+        <filter id="nodeShadow" x="-20%" y="-20%" width="150%" height="150%">
+          <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.15" />
+        </filter>
+        <linearGradient id="rootGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#059669" />
+          <stop offset="100%" stop-color="#047857" />
+        </linearGradient>
+        <linearGradient id="nodeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="100%" stop-color="#f0fdf4" />
+        </linearGradient>
+      </defs>
+    `;
+
+    // Render Edges (connecting branches)
+    edges.forEach(edge => {
+      const parentNode = nodes[edge.parentIndex];
+      const childNode = nodes[edge.childIndex];
+      svgContent += `
+        <line 
+          x1="${parentNode.x}" 
+          y1="${parentNode.y}" 
+          x2="${childNode.x}" 
+          y2="${childNode.y}" 
+          class="tree-branch-line" 
+          stroke="#94a3b8" 
+          stroke-width="2.5" 
+          stroke-dasharray="0"
+        />
+      `;
+    });
+
+    // Render Nodes
+    nodes.forEach(node => {
+      const isRoot = node.isRoot;
+      const circleFill = isRoot ? "url(#rootGradient)" : "url(#nodeGradient)";
+      const strokeColor = isRoot ? "#065f46" : "#10b981";
+      const textColor = isRoot ? "#ffffff" : "#0f172a";
+      const subTextColor = isRoot ? "#d1fae5" : "#059669";
+      const strokeWidth = isRoot ? "3" : "2";
+
+      svgContent += `
+        <g class="tree-node-group" data-index="${node.index}" data-price="${node.price}" data-vendor="${node.vendor}">
+          <!-- Halo on hover / highlight -->
+          <circle cx="${node.x}" cy="${node.y}" r="${this.options.nodeRadius + 6}" class="node-halo" fill="transparent" />
+          
+          <!-- Main Node Circle -->
+          <circle 
+            cx="${node.x}" 
+            cy="${node.y}" 
+            r="${this.options.nodeRadius}" 
+            fill="${circleFill}" 
+            stroke="${strokeColor}" 
+            stroke-width="${strokeWidth}" 
+            filter="url(#nodeShadow)" 
+            class="tree-node-circle ${isRoot ? 'root-circle' : ''}" 
+          />
+
+          <!-- Root Crown Icon / Indicator -->
+          ${isRoot ? `
+            <text x="${node.x}" y="${node.y - 34}" text-anchor="middle" font-size="12" fill="#047857" font-weight="700">
+              ★ MIN ROOT
+            </text>
+          ` : ''}
+
+          <!-- Node Index Tag Pill -->
+          <rect 
+            x="${node.x - 14}" 
+            y="${node.y - this.options.nodeRadius - 8}" 
+            width="28" 
+            height="15" 
+            rx="7" 
+            fill="${isRoot ? '#047857' : '#e2e8f0'}" 
+            stroke="${isRoot ? '#10b981' : '#cbd5e1'}" 
+            stroke-width="1"
+          />
+          <text 
+            x="${node.x}" 
+            y="${node.y - this.options.nodeRadius + 3}" 
+            text-anchor="middle" 
+            font-size="9.5" 
+            font-family="system-ui, -apple-system, sans-serif" 
+            font-weight="700" 
+            fill="${isRoot ? '#ecfdf5' : '#475569'}">
+            i=${node.index}
+          </text>
+
+          <!-- Price Text in Center of Circle -->
+          <text 
+            x="${node.x}" 
+            y="${node.y + 4}" 
+            text-anchor="middle" 
+            font-size="13.5" 
+            font-weight="800" 
+            font-family="system-ui, -apple-system, sans-serif" 
+            fill="${textColor}">
+            ₹${node.price.toFixed(2)}
+          </text>
+
+          <!-- Vendor / Sublabel beneath price -->
+          ${node.vendor ? `
+            <text 
+              x="${node.x}" 
+              y="${node.y + 17}" 
+              text-anchor="middle" 
+              font-size="9" 
+              font-weight="700" 
+              font-family="system-ui, -apple-system, sans-serif" 
+              fill="${subTextColor}">
+              ${node.vendor.substring(0, 10)}
+            </text>
+          ` : ''}
+        </g>
+      `;
+    });
+
+    svgContent += `</svg>`;
+    return svgContent;
+  }
+
+  /**
+   * Generates linear array HTML view with parent and children links
+   */
+  generateArrayHtml() {
+    const heap = this.heapInstance.getArray();
+    if (heap.length === 0) return "<p>Heap is empty.</p>";
+
+    let html = `<div class="heap-array-flex">`;
+
+    heap.forEach((item, i) => {
+      const price = typeof item === 'object' && item !== null && 'price' in item ? Number(item.price) : Number(item);
+      const vendor = typeof item === 'object' && item !== null && item.vendor ? item.vendor : '';
+      const isRoot = i === 0;
+      const parentIdx = i > 0 ? Math.floor((i - 1) / 2) : '-';
+      const leftIdx = 2 * i + 1 < heap.length ? 2 * i + 1 : '-';
+      const rightIdx = 2 * i + 2 < heap.length ? 2 * i + 2 : '-';
+
+      html += `
+        <div class="array-cell-card ${isRoot ? 'array-cell-root' : ''}" data-index="${i}">
+          <div class="cell-index-badge">Index [${i}] ${isRoot ? '• ROOT' : ''}</div>
+          <div class="cell-value-price">₹${price.toFixed(2)}</div>
+          ${vendor ? `<div class="cell-vendor-name">${vendor}</div>` : ''}
+          <div class="cell-pointers">
+            <span title="Parent Index">P: <b>${parentIdx}</b></span>
+            <span title="Left Child Index">L: <b>${leftIdx}</b></span>
+            <span title="Right Child Index">R: <b>${rightIdx}</b></span>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+    return html;
+  }
+
+  /**
+   * Attach tooltip/hover interaction to SVG nodes
+   */
+  attachSvgEvents() {
+    const groups = this.container.querySelectorAll(".tree-node-group");
+    const arrayCards = this.container.querySelectorAll(".array-cell-card");
+
+    groups.forEach(g => {
+      const idx = g.getAttribute("data-index");
+      g.addEventListener("mouseenter", () => {
+        g.classList.add("highlighted-node");
+        const matchingCard = this.container.querySelector(`.array-cell-card[data-index="${idx}"]`);
+        if (matchingCard) matchingCard.classList.add("array-card-active");
+      });
+      g.addEventListener("mouseleave", () => {
+        g.classList.remove("highlighted-node");
+        const matchingCard = this.container.querySelector(`.array-cell-card[data-index="${idx}"]`);
+        if (matchingCard) matchingCard.classList.remove("array-card-active");
+      });
+      g.addEventListener("click", () => {
+        if (this.options.onNodeClick) {
+          this.options.onNodeClick(idx, this.heapInstance.heap[idx]);
+        }
+      });
+    });
+
+    arrayCards.forEach(c => {
+      const idx = c.getAttribute("data-index");
+      c.addEventListener("mouseenter", () => {
+        const matchingNode = this.container.querySelector(`.tree-node-group[data-index="${idx}"]`);
+        if (matchingNode) matchingNode.classList.add("highlighted-node");
+      });
+      c.addEventListener("mouseleave", () => {
+        const matchingNode = this.container.querySelector(`.tree-node-group[data-index="${idx}"]`);
+        if (matchingNode) matchingNode.classList.remove("highlighted-node");
+      });
+    });
+  }
+}
+
+// Expose globally
+if (typeof window !== 'undefined') {
+  window.HeapVisualizer = HeapVisualizer;
+}
+
+
+  /* ========================================================
+     4. APPLICATION CONTROLLER & UI ROUTER
+     ======================================================== */
+/**
+ * Smart Grocery Price Comparison System - Application Controller
+ * 
+ * Title: Enhancing Grocery Cost Savings Using a Smart Grocery Price Comparison System
+ *        Compared with Traditional Manual Price Comparison
+ */
+
+document.addEventListener("DOMContentLoaded", () => {
+  App.init();
+});
+
+const App = {
+  activeSection: "home",
+  products: [],
+  currentComparisonHeap: null,
+  visualizerInstance: null,
+  sandboxHeap: null,
+  charts: {},
+
+  init() {
+    // 1. Load initial products
+    this.products = DataService.getProducts();
+
+    // 2. Initialize visualizer instances
+    this.sandboxHeap = new MinHeap();
+    // Pre-populate sandbox with Indian grocery prices
+    [239.00, 245.00, 255.00, 265.00, 279.00, 285.00].forEach(p => this.sandboxHeap.insert({ price: p, vendor: "Demo" }));
+
+    this.visualizerInstance = new HeapVisualizer("treeVisualizerContainer", {
+      onNodeClick: (index, item) => {
+        this.showToast(`Node i=${index}: ₹${Number(item.price || item).toFixed(2)} ${item.vendor ? '(' + item.vendor + ')' : ''}`, "info");
+      }
+    });
+
+    // 3. Setup Navigation & Hash Routing
+    this.setupNavigation();
+
+    // 4. Setup Event Listeners
+    this.setupEventListeners();
+
+    // 5. Render Initial Views
+    this.renderHomeStats();
+    this.renderProductTable();
+    this.populateComparisonDropdown();
+    this.runDefaultComparison();
+    this.renderVisualizerView();
+    this.renderRecommendationDashboard();
+
+    // 6. Handle URL Hash
+    const hash = window.location.hash.replace("#", "");
+    if (hash && ["home", "products", "compare", "visualizer", "dashboard", "about"].includes(hash)) {
+      this.navigateTo(hash);
+    } else {
+      this.navigateTo("home");
+    }
+  },
+
+  // ----------------------------------------------------
+  // NAVIGATION & ROUTING
+  // ----------------------------------------------------
+  setupNavigation() {
+    const navLinks = document.querySelectorAll(".nav-link");
+    navLinks.forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const target = link.getAttribute("data-section");
+        this.navigateTo(target);
+      });
+    });
+
+    // Mobile Hamburger Toggle
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const sidebar = document.getElementById("appSidebar");
+    if (mobileMenuBtn && sidebar) {
+      mobileMenuBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+      });
+    }
+
+    // Hash change listener
+    window.addEventListener("hashchange", () => {
+      const hash = window.location.hash.replace("#", "");
+      if (hash && hash !== this.activeSection) {
+        this.navigateTo(hash);
+      }
+    });
+  },
+
+  navigateTo(sectionId) {
+    this.activeSection = sectionId;
+    window.location.hash = sectionId;
+
+    // Update active nav link
+    document.querySelectorAll(".nav-link").forEach(link => {
+      if (link.getAttribute("data-section") === sectionId) {
+        link.classList.add("active");
+      } else {
+        link.classList.remove("active");
+      }
+    });
+
+    // Toggle sections visibility
+    document.querySelectorAll(".page-section").forEach(sec => {
+      if (sec.id === `section-${sectionId}`) {
+        sec.classList.remove("hidden-section");
+        sec.classList.add("active-section");
+      } else {
+        sec.classList.add("hidden-section");
+        sec.classList.remove("active-section");
+      }
+    });
+
+    // Close mobile menu if open
+    const sidebar = document.getElementById("appSidebar");
+    if (sidebar) sidebar.classList.remove("open");
+
+    // Scroll to top of content
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Section-specific refresh
+    if (sectionId === "products") {
+      this.renderProductTable();
+    } else if (sectionId === "compare") {
+      this.populateComparisonDropdown();
+    } else if (sectionId === "visualizer") {
+      if (this.currentComparisonHeap && this.currentComparisonHeap.size() > 0) {
+        this.visualizerInstance.bindHeap(this.currentComparisonHeap);
+      } else {
+        this.visualizerInstance.bindHeap(this.sandboxHeap);
+      }
+    } else if (sectionId === "dashboard") {
+      this.renderRecommendationDashboard();
+      this.initDashboardCharts();
+    } else if (sectionId === "home") {
+      this.renderHomeStats();
+    }
+  },
+
+  // ----------------------------------------------------
+  // HOME PAGE STATS
+  // ----------------------------------------------------
+  renderHomeStats() {
+    const products = DataService.getProducts();
+    const uniqueProducts = DataService.getUniqueProductNames();
+    const vendors = DataService.getVendors();
+    const categories = DataService.getCategories();
+
+    const statProds = document.getElementById("statTotalProducts");
+    const statUnique = document.getElementById("statUniqueItems");
+    const statVendors = document.getElementById("statTotalVendors");
+    const statCategories = document.getElementById("statCategories");
+
+    if (statProds) statProds.textContent = products.length;
+    if (statUnique) statUnique.textContent = uniqueProducts.length;
+    if (statVendors) statVendors.textContent = vendors.length;
+    if (statCategories) statCategories.textContent = categories.length;
+
+    // Calculate sample max saving across catalog
+    let totalMaxDiff = 0;
+    uniqueProducts.forEach(name => {
+      const items = DataService.getVendorsForProduct(name);
+      if (items.length > 1) {
+        const prices = items.map(p => p.price);
+        totalMaxDiff += (Math.max(...prices) - Math.min(...prices));
+      }
+    });
+    const statSavings = document.getElementById("statPotentialSavings");
+    if (statSavings) statSavings.textContent = `₹${totalMaxDiff.toFixed(2)}`;
+  },
+
+  // ----------------------------------------------------
+  // MODULE 1: PRODUCT DATA MANAGEMENT
+  // ----------------------------------------------------
+  renderProductTable() {
+    this.products = DataService.getProducts();
+    const tbody = document.getElementById("productTableBody");
+    const countBadge = document.getElementById("productCountBadge");
+
+    if (!tbody) return;
+
+    // Filter values
+    const searchTerm = (document.getElementById("productSearchInput")?.value || "").toLowerCase().trim();
+    const selectedCategory = document.getElementById("productCategoryFilter")?.value || "ALL";
+    const selectedVendor = document.getElementById("productVendorFilter")?.value || "ALL";
+    const selectedAvailability = document.getElementById("productAvailabilityFilter")?.value || "ALL";
+    const sortBy = document.getElementById("productSortSelect")?.value || "name_asc";
+
+    // Populate category and vendor filters if needed
+    this.populateFilterDropdowns();
+
+    // Filter
+    let filtered = this.products.filter(p => {
+      const matchSearch = p.name.toLowerCase().includes(searchTerm) || 
+                          p.vendor.toLowerCase().includes(searchTerm) ||
+                          p.category.toLowerCase().includes(searchTerm);
+      const matchCat = selectedCategory === "ALL" || p.category === selectedCategory;
+      const matchVendor = selectedVendor === "ALL" || p.vendor === selectedVendor;
+      const matchAvail = selectedAvailability === "ALL" || p.availability === selectedAvailability;
+      return matchSearch && matchCat && matchVendor && matchAvail;
+    });
+
+    // Sort
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "price_asc": return a.price - b.price;
+        case "price_desc": return b.price - a.price;
+        case "name_asc": return a.name.localeCompare(b.name);
+        case "name_desc": return b.name.localeCompare(a.name);
+        case "vendor_asc": return a.vendor.localeCompare(b.vendor);
+        default: return 0;
+      }
+    });
+
+    if (countBadge) countBadge.textContent = `${filtered.length} products found`;
+
+    // Render Table Rows
+    if (filtered.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" class="text-center py-8 text-slate-500">
+            <i class="fa-solid fa-box-open text-3xl mb-2 block"></i>
+            No grocery items match the search filters. Try clearing filters or adding a product.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(p => {
+      const availClass = p.availability === "In Stock" 
+        ? "badge-instock" 
+        : (p.availability === "Limited Stock" ? "badge-limited" : "badge-outofstock");
+
+      return `
+        <tr data-id="${p.id}">
+          <td class="font-semibold text-slate-800">
+            <div class="product-name-cell">
+              <span>${this.escapeHtml(p.name)}</span>
+              ${p.discount && p.discount !== 'Standard' ? `<span class="discount-pill">${this.escapeHtml(p.discount)}</span>` : ''}
+            </div>
+          </td>
+          <td><span class="category-chip">${this.escapeHtml(p.category)}</span></td>
+          <td>
+            <span class="vendor-tag vendor-${this.slugify(p.vendor)}">
+              <i class="fa-solid fa-store"></i> ${this.escapeHtml(p.vendor)}
+            </span>
+          </td>
+          <td class="font-bold text-emerald-700 text-base">
+            ₹${Number(p.price).toFixed(2)}
+            <span class="text-xs text-slate-400 font-normal">/ ${this.escapeHtml(p.unit || 'unit')}</span>
+          </td>
+          <td>
+            <span class="availability-badge ${availClass}">
+              <span class="status-indicator"></span>
+              ${this.escapeHtml(p.availability)}
+            </span>
+          </td>
+          <td class="text-xs text-slate-500">${p.lastUpdated || '2026-11-20'}</td>
+          <td class="text-right whitespace-nowrap">
+            <button 
+              class="btn btn-sm btn-outline-emerald" 
+              title="Compare Across Vendors using Min-Heap" 
+              onclick="App.quickCompare('${encodeURIComponent(p.name)}')">
+              <i class="fa-solid fa-scale-balanced"></i> Compare
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join("");
+  },
+
+  populateFilterDropdowns() {
+    const catSelect = document.getElementById("productCategoryFilter");
+    const vendorSelect = document.getElementById("productVendorFilter");
+
+    if (catSelect && catSelect.children.length <= 1) {
+      const categories = DataService.getCategories();
+      categories.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c;
+        opt.textContent = c;
+        catSelect.appendChild(opt);
+      });
+    }
+
+    if (vendorSelect && vendorSelect.children.length <= 1) {
+      const vendors = DataService.getVendors();
+      vendors.forEach(v => {
+        const opt = document.createElement("option");
+        opt.value = v;
+        opt.textContent = v;
+        vendorSelect.appendChild(opt);
+      });
+    }
+  },
+
+  resetDemoData() {
+    if (confirm("Reset all products back to the original demonstration grocery catalog?")) {
+      DataService.resetToDefaults();
+      this.showToast("Demonstration grocery catalog restored!", "success");
+      this.renderProductTable();
+      this.renderHomeStats();
+      this.populateComparisonDropdown();
+      this.runDefaultComparison();
+    }
+  },
+
+  // ----------------------------------------------------
+  // MODULE 2: MIN HEAP PRICE COMPARISON & RANKING
+  // ----------------------------------------------------
+  populateComparisonDropdown() {
+    const select = document.getElementById("comparisonProductSelect");
+    if (!select) return;
+
+    const uniqueNames = DataService.getUniqueProductNames();
+    const currentVal = select.value;
+    select.innerHTML = `<option value="" disabled>-- Select a Grocery Item to Compare Across Stores --</option>`;
+
+    uniqueNames.forEach(name => {
+      const opt = document.createElement("option");
+      opt.value = name;
+      opt.textContent = name;
+      select.appendChild(opt);
+    });
+
+    if (currentVal && uniqueNames.includes(currentVal)) {
+      select.value = currentVal;
+    } else if (uniqueNames.length > 0) {
+      select.value = uniqueNames[0]; // Default to first item
+    }
+  },
+
+  quickCompare(encodedName) {
+    const name = decodeURIComponent(encodedName);
+    this.navigateTo("compare");
+    const select = document.getElementById("comparisonProductSelect");
+    if (select) {
+      select.value = name;
+      this.runComparisonForProduct(name);
+    }
+  },
+
+  runDefaultComparison() {
+    const select = document.getElementById("comparisonProductSelect");
+    if (select && select.value) {
+      this.runComparisonForProduct(select.value);
+    } else {
+      const uniqueNames = DataService.getUniqueProductNames();
+      if (uniqueNames.length > 0) {
+        this.runComparisonForProduct(uniqueNames[0]);
+      }
+    }
+  },
+
+  runComparisonForProduct(productName) {
+    if (!productName) return;
+
+    const vendorItems = DataService.getVendorsForProduct(productName);
+    const container = document.getElementById("comparisonResultsContainer");
+    const rootBadgeContainer = document.getElementById("minHeapRootHighlight");
+    const logsContainer = document.getElementById("heapLogsOutput");
+    const rankedListContainer = document.getElementById("ascendingRankedVendors");
+
+    if (vendorItems.length === 0) {
+      if (container) {
+        container.innerHTML = `<p class="p-6 text-center text-slate-500">No vendors found for "${productName}".</p>`;
+      }
+      return;
+    }
+
+    // 1. Create a fresh real Min-Heap instance
+    const minHeap = new MinHeap();
+    this.currentComparisonHeap = minHeap;
+
+    // 2. Insert items one by one into the MinHeap
+    vendorItems.forEach(item => {
+      minHeap.insert(item);
+    });
+
+    // 3. Root is the absolute minimum price (O(1) peek)
+    const rootItem = minHeap.peek();
+
+    // 4. Extract all items in ascending order using repeated extract-min (Heap Sort O(n log n))
+    const ascendingRanked = minHeap.getAscendingRankedList();
+
+    // 5. Calculate Savings vs Highest and Average
+    const lowestPrice = rootItem.price;
+    const highestPrice = ascendingRanked[ascendingRanked.length - 1].price;
+    const worstVendor = ascendingRanked[ascendingRanked.length - 1].vendor;
+    const sumPrice = ascendingRanked.reduce((acc, curr) => acc + curr.price, 0);
+    const avgPrice = sumPrice / ascendingRanked.length;
+
+    const maxDollarSaving = highestPrice - lowestPrice;
+    const maxPercentSaving = highestPrice > 0 ? ((maxDollarSaving / highestPrice) * 100) : 0;
+    const avgDollarSaving = avgPrice - lowestPrice;
+
+    // 6. Update Root Highlight UI
+    if (rootBadgeContainer) {
+      rootBadgeContainer.innerHTML = `
+        <div class="root-showcase-card">
+          <div class="root-badge-header">
+            <span class="crown-icon"><i class="fa-solid fa-crown text-amber-400"></i> MIN HEAP ROOT (O(1) PEEK)</span>
+            <span class="vendor-tag vendor-${this.slugify(rootItem.vendor)}">${rootItem.vendor}</span>
+          </div>
+          <div class="root-price-row">
+            <div class="root-price-val">₹${Number(rootItem.price).toFixed(2)}</div>
+            <div class="root-unit-text">${rootItem.unit || 'unit'} • ${rootItem.availability}</div>
+          </div>
+          <div class="root-savings-banner">
+            <i class="fa-solid fa-circle-check text-emerald-600"></i>
+            <span>Cheapest vendor! Save <strong>₹${maxDollarSaving.toFixed(2)} (${maxPercentSaving.toFixed(1)}%)</strong> vs ${worstVendor} (₹${highestPrice.toFixed(2)})</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // 7. Update Stats Summary Grid
+    const statCards = document.getElementById("comparisonMetricsGrid");
+    if (statCards) {
+      statCards.innerHTML = `
+        <div class="metric-card">
+          <div class="metric-label">Vendors Analyzed</div>
+          <div class="metric-value">${vendorItems.length} stores</div>
+          <div class="metric-sub">Min-Heap size: n = ${vendorItems.length}</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Root (Lowest Price)</div>
+          <div class="metric-value text-emerald-700">₹${lowestPrice.toFixed(2)}</div>
+          <div class="metric-sub">${rootItem.vendor}</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Max Price (Worst)</div>
+          <div class="metric-value text-rose-600">₹${highestPrice.toFixed(2)}</div>
+          <div class="metric-sub">${worstVendor}</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Potential Savings</div>
+          <div class="metric-value text-emerald-600">₹${maxDollarSaving.toFixed(2)}</div>
+          <div class="metric-sub">${maxPercentSaving.toFixed(1)}% Cost Reduction</div>
+        </div>
+      `;
+    }
+
+    // 8. Update Ascending Ranked List (Heap Sort output)
+    if (rankedListContainer) {
+      rankedListContainer.innerHTML = ascendingRanked.map((item, rank) => {
+        const isBest = rank === 0;
+        const diffFromMin = item.price - lowestPrice;
+        const diffText = isBest 
+          ? `<span class="badge-best-root"><i class="fa-solid fa-trophy"></i> Best Price (Root)</span>`
+          : `<span class="badge-more-expensive">+₹${diffFromMin.toFixed(2)} (+${((diffFromMin / lowestPrice) * 100).toFixed(0)}%)</span>`;
+
+        return `
+          <div class="ranked-vendor-row ${isBest ? 'ranked-root-highlight' : ''}">
+            <div class="rank-position">#${rank + 1}</div>
+            <div class="rank-vendor-info">
+              <div class="rank-vendor-name">
+                <span class="vendor-tag vendor-${this.slugify(item.vendor)}">${item.vendor}</span>
+                <span class="rank-avail-text">${item.availability}</span>
+              </div>
+              <div class="rank-discount-text text-xs text-slate-500">${item.discount || 'Standard Price'}</div>
+            </div>
+            <div class="rank-price-info">
+              <div class="rank-price-val">₹${Number(item.price).toFixed(2)}</div>
+              <div>${diffText}</div>
+            </div>
+            <div class="rank-action">
+              <button class="btn-sm btn-outline-emerald" onclick="App.addSelectedToBasket('${encodeURIComponent(item.name)}')">
+                <i class="fa-solid fa-cart-plus"></i> Add
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // 9. Update Real Heap Operation Trace Logs
+    if (logsContainer) {
+      logsContainer.innerHTML = minHeap.logs.map((log, index) => {
+        let icon = '<i class="fa-solid fa-angle-right text-emerald-500"></i>';
+        if (log.includes("Swapping")) icon = '<i class="fa-solid fa-arrows-rotate text-amber-500"></i>';
+        if (log.includes("Extract-Min")) icon = '<i class="fa-solid fa-minus text-rose-500"></i>';
+        if (log.includes("Inserted")) icon = '<i class="fa-solid fa-plus text-emerald-600"></i>';
+
+        return `<div class="heap-log-entry"><span class="log-step">Step ${index + 1}</span> ${icon} <span>${this.escapeHtml(log)}</span></div>`;
+      }).join("");
+    }
+
+    // 10. Automatically update visualizer tree if visualizer is open or bound
+    if (this.visualizerInstance) {
+      this.visualizerInstance.bindHeap(minHeap);
+    }
+  },
+
+  viewHeapInVisualizer() {
+    this.navigateTo("visualizer");
+    if (this.currentComparisonHeap && this.currentComparisonHeap.size() > 0) {
+      this.visualizerInstance.bindHeap(this.currentComparisonHeap);
+    }
+  },
+
+  // ----------------------------------------------------
+  // MODULE 4: MIN HEAP VISUALIZATION & INTERACTIVE SANDBOX
+  // ----------------------------------------------------
+  renderVisualizerView() {
+    const targetHeap = (this.currentComparisonHeap && this.currentComparisonHeap.size() > 0)
+      ? this.currentComparisonHeap
+      : this.sandboxHeap;
+
+    if (this.visualizerInstance) {
+      this.visualizerInstance.bindHeap(targetHeap);
+    }
+  },
+
+  sandboxInsert() {
+    const valInput = document.getElementById("sandboxPriceInput");
+    const vendorInput = document.getElementById("sandboxVendorInput");
+    const price = parseFloat(valInput?.value);
+    const vendor = vendorInput?.value?.trim() || "Store";
+
+    if (isNaN(price) || price <= 0) {
+      this.showToast("Please enter a valid numeric price.", "error");
+      return;
+    }
+
+    const currentHeap = (this.currentComparisonHeap && this.currentComparisonHeap.size() > 0)
+      ? this.currentComparisonHeap
+      : this.sandboxHeap;
+
+    currentHeap.insert({ price, vendor, name: "Item" });
+    this.visualizerInstance.bindHeap(currentHeap);
+    this.showToast(`Inserted ₹${price.toFixed(2)} (${vendor}). Heapify-Up restored Min-Heap!`, "success");
+
+    if (valInput) valInput.value = "";
+    this.renderSandboxLogs(currentHeap);
+  },
+
+  sandboxExtractMin() {
+    const currentHeap = (this.currentComparisonHeap && this.currentComparisonHeap.size() > 0)
+      ? this.currentComparisonHeap
+      : this.sandboxHeap;
+
+    if (currentHeap.isEmpty()) {
+      this.showToast("Heap is already empty!", "error");
+      return;
+    }
+
+    const min = currentHeap.extractMin();
+    this.visualizerInstance.bindHeap(currentHeap);
+    const priceStr = min ? `₹${Number(min.price || min).toFixed(2)}` : '';
+    this.showToast(`Extract-Min removed root: ${priceStr}. Heapify-Down restored Min-Heap!`, "info");
+    this.renderSandboxLogs(currentHeap);
+  },
+
+  sandboxClear() {
+    const currentHeap = (this.currentComparisonHeap && this.currentComparisonHeap.size() > 0)
+      ? this.currentComparisonHeap
+      : this.sandboxHeap;
+
+    currentHeap.clear();
+    this.visualizerInstance.bindHeap(currentHeap);
+    this.showToast("Heap cleared.", "info");
+    this.renderSandboxLogs(currentHeap);
+  },
+
+  renderSandboxLogs(heap) {
+    const logsEl = document.getElementById("sandboxLogs");
+    if (!logsEl) return;
+    logsEl.innerHTML = heap.logs.slice(-8).map((l, i) => `
+      <div class="heap-log-entry-sm">
+        <i class="fa-solid fa-terminal text-emerald-600 text-xs"></i> ${this.escapeHtml(l)}
+      </div>
+    `).join("");
+  },
+
+  // ----------------------------------------------------
+  // MODULE 5: RECOMMENDATION & USER DASHBOARD
+  // ----------------------------------------------------
+  renderRecommendationDashboard() {
+    const uniqueProducts = DataService.getUniqueProductNames();
+    const vendors = DataService.getVendors();
+
+    // 1. Leaderboard: Which store has the most lowest prices?
+    const vendorWinCounts = {};
+    vendors.forEach(v => vendorWinCounts[v] = 0);
+
+    uniqueProducts.forEach(name => {
+      const items = DataService.getVendorsForProduct(name);
+      if (items.length > 0) {
+        const heap = new MinHeap();
+        items.forEach(it => heap.insert(it));
+        const root = heap.peek();
+        if (root && root.vendor) {
+          vendorWinCounts[root.vendor] = (vendorWinCounts[root.vendor] || 0) + 1;
+        }
+      }
+    });
+
+    const leaderboardEl = document.getElementById("cheapestVendorsLeaderboard");
+    if (leaderboardEl) {
+      const sortedVendors = Object.entries(vendorWinCounts).sort((a, b) => b[1] - a[1]);
+      leaderboardEl.innerHTML = sortedVendors.map(([vendor, count], idx) => `
+        <div class="leaderboard-item ${idx === 0 ? 'leaderboard-champion' : ''}">
+          <div class="leaderboard-rank">#${idx + 1}</div>
+          <div class="leaderboard-info">
+            <span class="vendor-tag vendor-${this.slugify(vendor)}">${vendor}</span>
+            <div class="text-xs text-slate-500">${count} items at lowest root price</div>
+          </div>
+          <div class="leaderboard-score">
+            <div class="score-badge">${((count / uniqueProducts.length) * 100).toFixed(0)}%</div>
+            <div class="score-sub">Dominance</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // 2. Best Deals & Rollbacks Showcase
+    const dealsEl = document.getElementById("bestDealsContainer");
+    if (dealsEl) {
+      const allProducts = DataService.getProducts();
+      const dealProducts = allProducts.filter(p => p.discount && p.discount !== "Standard").slice(0, 4);
+      dealsEl.innerHTML = dealProducts.map(p => `
+        <div class="deal-card">
+          <div class="deal-badge"><i class="fa-solid fa-tag"></i> ${this.escapeHtml(p.discount)}</div>
+          <div class="deal-prod-name">${this.escapeHtml(p.name)}</div>
+          <div class="deal-meta">
+            <span class="vendor-tag vendor-${this.slugify(p.vendor)}">${p.vendor}</span>
+            <span class="deal-price">₹${Number(p.price).toFixed(2)}</span>
+          </div>
+          <button class="btn-sm btn-outline-emerald w-full mt-2" onclick="App.quickCompare('${encodeURIComponent(p.name)}')">
+            <i class="fa-solid fa-chart-simple"></i> Compare in Heap
+          </button>
+        </div>
+      `).join("");
+    }
+
+    // 3. Render Cart/Basket Savings Simulation
+    this.renderBasketSimulator();
+  },
+
+  renderBasketSimulator() {
+    const basketContainer = document.getElementById("basketItemsList");
+    const basket = DataService.getBasket();
+    const uniqueProducts = DataService.getUniqueProductNames();
+
+    // Initialize sample basket if empty
+    if (basket.length === 0 && uniqueProducts.length >= 3) {
+      DataService.addToBasket(uniqueProducts[0], 1);
+      DataService.addToBasket(uniqueProducts[1], 1);
+      DataService.addToBasket(uniqueProducts[2], 1);
+    }
+
+    const currentBasket = DataService.getBasket();
+
+    // Populate Basket dropdown selector
+    const basketSelect = document.getElementById("addBasketSelect");
+    if (basketSelect) {
+      basketSelect.innerHTML = `<option value="" disabled selected>-- Choose grocery item to add to basket --</option>`;
+      uniqueProducts.forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        basketSelect.appendChild(opt);
+      });
+    }
+
+    if (basketContainer) {
+      if (currentBasket.length === 0) {
+        basketContainer.innerHTML = `<p class="p-4 text-center text-slate-500">Your basket is empty. Add grocery items above!</p>`;
+      } else {
+        basketContainer.innerHTML = currentBasket.map(item => {
+          // Find lowest price for this item using Min-Heap
+          const vendorItems = DataService.getVendorsForProduct(item.productName);
+          let lowestPrice = 0;
+          let lowestVendor = "N/A";
+          if (vendorItems.length > 0) {
+            const h = new MinHeap();
+            vendorItems.forEach(v => h.insert(v));
+            const root = h.peek();
+            lowestPrice = root.price;
+            lowestVendor = root.vendor;
+          }
+
+          return `
+            <div class="basket-row">
+              <div class="basket-item-title">
+                <strong>${this.escapeHtml(item.productName)}</strong>
+                <div class="text-xs text-emerald-700 font-semibold">Min-Heap Root: ₹${lowestPrice.toFixed(2)} at ${lowestVendor}</div>
+              </div>
+              <div class="basket-qty">Qty: ${item.quantity}</div>
+              <div class="basket-subtotal font-bold text-slate-800">₹${(lowestPrice * item.quantity).toFixed(2)}</div>
+              <button class="btn-icon-danger" title="Remove" onclick="App.removeBasketItem('${encodeURIComponent(item.productName)}')">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          `;
+        }).join("");
+      }
+    }
+
+    // Calculate Comparative Basket Totals
+    this.calculateComparativeSavings(currentBasket);
+  },
+
+  calculateComparativeSavings(basket) {
+    if (basket.length === 0) return;
+
+    let smartTotal = 0;
+    let worstTotal = 0;
+    let singleVendorTotals = {};
+    const vendors = DataService.getVendors();
+    vendors.forEach(v => singleVendorTotals[v] = 0);
+
+    basket.forEach(bItem => {
+      const vendorItems = DataService.getVendorsForProduct(bItem.productName);
+      if (vendorItems.length > 0) {
+        const heap = new MinHeap();
+        vendorItems.forEach(v => heap.insert(v));
+
+        const ranked = heap.getAscendingRankedList();
+        const rootMin = ranked[0];
+        const maxWorst = ranked[ranked.length - 1];
+
+        smartTotal += (rootMin.price * bItem.quantity);
+        worstTotal += (maxWorst.price * bItem.quantity);
+
+        vendors.forEach(v => {
+          const match = vendorItems.find(it => it.vendor === v);
+          if (match) {
+            singleVendorTotals[v] += (match.price * bItem.quantity);
+          } else {
+            // If vendor does not carry, estimate with average
+            singleVendorTotals[v] += (rootMin.price * bItem.quantity);
+          }
+        });
+      }
+    });
+
+    const netSaving = worstTotal - smartTotal;
+    const pctSaving = worstTotal > 0 ? ((netSaving / worstTotal) * 100) : 0;
+    const weeklySpend = smartTotal;
+    const projectedAnnualSaving = netSaving * 52; // 52 weeks
+
+    const totalEl = document.getElementById("basketSmartTotal");
+    const worstEl = document.getElementById("basketWorstTotal");
+    const savingEl = document.getElementById("basketNetSavings");
+    const annualEl = document.getElementById("basketAnnualSavings");
+
+    if (totalEl) totalEl.textContent = `₹${smartTotal.toFixed(2)}`;
+    if (worstEl) worstEl.textContent = `₹${worstTotal.toFixed(2)}`;
+    if (savingEl) savingEl.textContent = `₹${netSaving.toFixed(2)} (${pctSaving.toFixed(1)}%)`;
+    if (annualEl) annualEl.textContent = `₹${projectedAnnualSaving.toFixed(2)}/yr`;
+  },
+
+  addSelectedToBasket(encodedName) {
+    const name = decodeURIComponent(encodedName);
+    DataService.addToBasket(name, 1);
+    this.showToast(`Added "${name}" to recommendation basket!`, "success");
+    this.renderBasketSimulator();
+  },
+
+  addCustomBasketItem() {
+    const select = document.getElementById("addBasketSelect");
+    if (!select || !select.value) {
+      this.showToast("Please select a product to add.", "error");
+      return;
+    }
+    DataService.addToBasket(select.value, 1);
+    this.showToast(`Added "${select.value}" to basket.`, "success");
+    this.renderBasketSimulator();
+  },
+
+  removeBasketItem(encodedName) {
+    const name = decodeURIComponent(encodedName);
+    DataService.removeFromBasket(name);
+    this.renderBasketSimulator();
+  },
+
+  clearBasket() {
+    DataService.clearBasket();
+    this.renderBasketSimulator();
+  },
+
+  initDashboardCharts() {
+    // Check if Chart.js is available
+    if (typeof Chart === 'undefined') return;
+
+    // Chart 1: Vendor Store Price Comparison Bar Chart
+    const ctx1 = document.getElementById("vendorPriceChart")?.getContext("2d");
+    if (ctx1) {
+      if (this.charts.vendorChart) this.charts.vendorChart.destroy();
+
+      const vendors = DataService.getVendors();
+      const products = DataService.getProducts();
+
+      // Calculate average price per vendor across inventory
+      const vendorAverages = vendors.map(v => {
+        const vendorProds = products.filter(p => p.vendor === v);
+        if (vendorProds.length === 0) return 0;
+        const sum = vendorProds.reduce((a, b) => a + b.price, 0);
+        return (sum / vendorProds.length).toFixed(2);
+      });
+
+      this.charts.vendorChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+          labels: vendors,
+          datasets: [{
+            label: 'Average Grocery Price (₹)',
+            data: vendorAverages,
+            backgroundColor: [
+              '#10b981', // Emerald
+              '#047857', // Dark Emerald
+              '#34d399', // Mint
+              '#059669', // Teal green
+              '#6ee7b7', // Light green
+              '#022c22'  // Deep forest
+            ],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `Avg Price: ₹${ctx.parsed.y}`
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { callback: (val) => `₹${val}` }
+            }
+          }
+        }
+      });
+    }
+
+    // Chart 2: Category Distribution
+    const ctx2 = document.getElementById("categoryDistributionChart")?.getContext("2d");
+    if (ctx2) {
+      if (this.charts.categoryChart) this.charts.categoryChart.destroy();
+
+      const categories = DataService.getCategories();
+      const products = DataService.getProducts();
+      const counts = categories.map(cat => products.filter(p => p.category === cat).length);
+
+      this.charts.categoryChart = new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+          labels: categories,
+          datasets: [{
+            data: counts,
+            backgroundColor: [
+              '#059669', '#10b981', '#34d399', '#6ee7b7', '#a7f3d0', '#047857', '#065f46'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 12 } }
+          }
+        }
+      });
+    }
+  },
+
+  // ----------------------------------------------------
+  // EVENT LISTENERS & UI HELPERS
+  // ----------------------------------------------------
+  setupEventListeners() {
+    // Product table filters
+    const searchInput = document.getElementById("productSearchInput");
+    if (searchInput) {
+      searchInput.addEventListener("input", () => this.renderProductTable());
+    }
+
+    const catFilter = document.getElementById("productCategoryFilter");
+    if (catFilter) {
+      catFilter.addEventListener("change", () => this.renderProductTable());
+    }
+
+    const vendorFilter = document.getElementById("productVendorFilter");
+    if (vendorFilter) {
+      vendorFilter.addEventListener("change", () => this.renderProductTable());
+    }
+
+    const availFilter = document.getElementById("productAvailabilityFilter");
+    if (availFilter) {
+      availFilter.addEventListener("change", () => this.renderProductTable());
+    }
+
+    const sortSelect = document.getElementById("productSortSelect");
+    if (sortSelect) {
+      sortSelect.addEventListener("change", () => this.renderProductTable());
+    }
+
+
+    // Compare dropdown change
+    const compSelect = document.getElementById("comparisonProductSelect");
+    if (compSelect) {
+      compSelect.addEventListener("change", () => {
+        this.runComparisonForProduct(compSelect.value);
+      });
+    }
+  },
+
+  showToast(message, type = "info") {
+    let container = document.getElementById("toastContainer");
+    if (!container) {
+      container = document.createElement("div");
+      container.id = "toastContainer";
+      container.className = "toast-container";
+      document.body.appendChild(container);
+    }
+
+    const toast = document.createElement("div");
+    toast.className = `toast-pill toast-${type}`;
+    let icon = "fa-circle-info";
+    if (type === "success") icon = "fa-circle-check";
+    if (type === "error") icon = "fa-triangle-exclamation";
+
+    toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${this.escapeHtml(message)}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.add("toast-fadeout");
+      setTimeout(() => toast.remove(), 400);
+    }, 3500);
+  },
+
+  escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  },
+
+  slugify(text) {
+    return String(text || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "");
+  }
+};
+
+// Global Exposure
+if (typeof window !== 'undefined') {
+  window.App = App;
+}
+
+  </script>
+
+</body>
+</html>
